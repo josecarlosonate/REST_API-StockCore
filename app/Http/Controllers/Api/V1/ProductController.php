@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreProductRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -21,9 +23,27 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreProductRequest $request)
     {
-        //
+        $validated = $request->validated();
+        $categories = $validated['categories'];
+
+        unset($validated['categories']);
+
+        $product = DB::transaction(function () use ($validated, $categories) {
+
+            $product = Product::create($validated);
+
+            $product->categories()->attach($categories);
+
+            return $product;
+        });
+
+        $product->load('categories');
+
+        return (new ProductResource($product))
+            ->response()
+            ->setStatusCode(201);
     }
 
     /**

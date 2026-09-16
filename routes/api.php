@@ -7,4 +7,5 @@ Route::prefix('v1')->group(function () {
 
     Route::get('/products', [ProductController::class, 'index']);
     Route::get('/products/{product}', [ProductController::class, 'show']);
+    Route::post('/products', [ProductController::class, 'store']);
 });

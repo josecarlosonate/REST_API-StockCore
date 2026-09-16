@@ -12,7 +12,6 @@ class Product extends Model
     use HasFactory;
 
     protected $fillable = [
-        'sku',
         'name',
         'description',
         'price',
@@ -26,9 +25,20 @@ class Product extends Model
 
     protected static function booted(): void
     {
-        static::saving(function (Product $product) {
 
-            if ($product->isDirty(['name', 'sku'])) {
+        static::creating(function (Product $product) {
+
+            do {
+                $sku = 'SKU-' . Str::upper(Str::random(6));
+            } while (Product::where('sku', $sku)->exists());
+
+            $product->sku = $sku;
+            $product->slug = Str::slug($product->name . '-' . $product->sku);
+        });
+
+        static::updating(function (Product $product) {
+
+            if ($product->isDirty('name')) {
                 $product->slug = Str::slug($product->name . '-' . $product->sku);
             }
         });
