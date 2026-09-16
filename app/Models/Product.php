@@ -18,6 +18,14 @@ class Product extends Model
         'is_active',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'price' => 'decimal:2',
+            'is_active' => 'boolean',
+        ];
+    }
+
     public function categories(): BelongsToMany
     {
         return $this->belongsToMany(Category::class);
