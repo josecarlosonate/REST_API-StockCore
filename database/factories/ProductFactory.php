@@ -18,7 +18,6 @@ class ProductFactory extends Factory
     public function definition(): array
     {
         return [
-            'sku' => fake()->unique()->bothify('SKU-??-####'),
             'name' => fake()->words(2, true),
             'description' => fake()->sentence(),
             'price' => fake()->randomFloat(2, 10, 50000),
