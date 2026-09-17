@@ -5,11 +5,22 @@ namespace Tests\Feature;
 use App\Models\Category;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use Laravel\Sanctum\Sanctum;
+use App\Models\User;
 
 class CategoryApiTest extends TestCase
 {
 
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $user = User::factory()->create();
+
+        Sanctum::actingAs($user);
+    }
 
     public function test_can_list_categories(): void
     {

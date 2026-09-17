@@ -6,10 +6,21 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Models\Product;
 use App\Models\Category;
+use Laravel\Sanctum\Sanctum;
+use App\Models\User;
 
 class ProductApiTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $user = User::factory()->create();
+
+        Sanctum::actingAs($user);
+    }
 
     public function test_can_list_products(): void
     {
