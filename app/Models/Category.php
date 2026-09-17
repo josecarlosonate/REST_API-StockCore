@@ -17,6 +17,13 @@ class Category extends Model
         'is_active',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'is_active' => 'boolean',
+        ];
+    }
+
     public function products(): BelongsToMany
     {
         return $this->belongsToMany(Product::class);
