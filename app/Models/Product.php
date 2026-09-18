@@ -31,6 +31,12 @@ class Product extends Model
         return $this->belongsToMany(Category::class);
     }
 
+    public function suppliers(): BelongsToMany
+    {
+        return $this->belongsToMany(Supplier::class)
+            ->withPivot('supplier_sku', 'cost');
+    }
+
     protected static function booted(): void
     {
 
