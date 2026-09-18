@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\ProductSupplierController;
 use App\Http\Controllers\Api\V1\SupplierController;
 
 Route::prefix('v1')->group(function () {
@@ -30,5 +31,10 @@ Route::prefix('v1')->group(function () {
         Route::get('/suppliers/{supplier}', [SupplierController::class, 'show']);
         Route::post('/suppliers', [SupplierController::class, 'store']);
         Route::patch('/suppliers/{supplier}', [SupplierController::class, 'update']);
+        // Rutas relaciones producto-proveedor
+        Route::post("/products/{product}/suppliers", [ProductSupplierController::class, 'store']);
+        Route::patch('/products/{product}/suppliers/{supplier}', [ProductSupplierController::class, 'update']);
+        Route::delete('/products/{product}/suppliers/{supplier}', [ProductSupplierController::class, 'destroy']);
+        Route::get("/products/{product}/suppliers", [ProductSupplierController::class, 'index']);
     });
 });
