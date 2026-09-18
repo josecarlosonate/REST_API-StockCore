@@ -4,10 +4,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\SupplierController;
 
 Route::prefix('v1')->group(function () {
 
-    // Ruta Login
+    // Ruta Login - numero de registro asignado 320916
     Route::post('/login', [AuthController::class, 'login']);
 
     Route::middleware('auth:sanctum')->group(function () {
@@ -24,5 +25,10 @@ Route::prefix('v1')->group(function () {
         Route::patch('/categories/{category}', [CategoryController::class, 'update']);
         // Ruta logout
         Route::post('/logout', [AuthController::class, 'logout']);
+        // Rutas de provedores de productos
+        Route::get('/suppliers', [SupplierController::class, 'index']);
+        Route::get('/suppliers/{supplier}', [SupplierController::class, 'show']);
+        Route::post('/suppliers', [SupplierController::class, 'store']);
+        Route::patch('/suppliers/{supplier}', [SupplierController::class, 'update']);
     });
 });
