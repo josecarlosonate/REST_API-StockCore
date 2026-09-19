@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProductSupplierRequest;
+use App\Http\Resources\ProductSupplierResource;
 use App\Models\Product;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
@@ -12,19 +13,9 @@ class ProductSupplierController extends Controller
 {
     public function index(Product $product)
     {
-        $suppliers = $product->suppliers()->get()->map(function ($supplier) {
-            return [
-                'id' => $supplier->id,
-                'name' => $supplier->name,
-                'supplier_sku' => $supplier->pivot->supplier_sku,
-                'cost' => $supplier->pivot->cost
-            ];
-        });
+        $suppliers = $product->suppliers()->get();
 
-
-        return response()->json([
-            'data' => $suppliers
-        ]);
+        return ProductSupplierResource::collection($suppliers);
     }
 
     public function store(StoreProductSupplierRequest $request, Product $product)
