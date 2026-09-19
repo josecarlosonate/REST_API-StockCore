@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Actions\Products\CreateProductAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
@@ -23,27 +24,15 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreProductRequest $request)
+    public function store(StoreProductRequest $request, CreateProductAction $action)
     {
-        $validated = $request->validated();
-        $categories = $validated['categories'];
+        $data = $request->validated();
 
-        unset($validated['categories']);
-
-        $product = DB::transaction(function () use ($validated, $categories) {
-
-            $product = Product::create($validated);
-
-            $product->categories()->attach($categories);
-
-            return $product;
-        });
+        $product = $action->execute($data);
 
         $product->load('categories');
 
-        return (new ProductResource($product))
-            ->response()
-            ->setStatusCode(201);
+        return (new ProductResource($product))->response()->setStatusCode(201);
     }
 
     /**
@@ -60,14 +49,14 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, Product $product)
     {
-        $validated = $request->validated();
-        $categories = $validated['categories'] ?? null;
+        $data = $request->validated();
+        $categories = $data['categories'] ?? null;
 
-        unset($validated['categories']);
+        unset($data['categories']);
 
-        DB::transaction(function () use ($validated, $categories, $product) {
+        DB::transaction(function () use ($data, $categories, $product) {
 
-            $product->update($validated);
+            $product->update($data);
 
             if ($categories !== null) {
                 $product->categories()->sync($categories);

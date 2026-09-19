@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Product extends Model
 {
@@ -35,6 +36,11 @@ class Product extends Model
     {
         return $this->belongsToMany(Supplier::class)
             ->withPivot('supplier_sku', 'cost');
+    }
+
+    public function inventory(): HasOne
+    {
+        return $this->hasOne(Inventory::class);
     }
 
     protected static function booted(): void
