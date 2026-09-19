@@ -17,6 +17,15 @@ class Inventory extends Model
         'max_stock',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'quantity'  => 'integer',
+            'min_stock' => 'integer',
+            'max_stock' => 'integer',
+        ];
+    }
+
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
