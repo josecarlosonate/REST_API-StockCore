@@ -45,5 +45,6 @@ Route::prefix('v1')->group(function () {
         Route::patch('/products/{product}/inventory', [InventoryController::class, 'update']);
         // Ruta movimientos de stock
         Route::post('/products/{product}/stock-movements', [StockMovementController::class, 'store']);
+        Route::get('/products/{product}/stock-movements', [StockMovementController::class, 'index']);
     });
 });
