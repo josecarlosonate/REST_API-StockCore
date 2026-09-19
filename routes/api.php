@@ -10,7 +10,7 @@ use App\Http\Controllers\Api\V1\SupplierController;
 Route::prefix('v1')->group(function () {
 
     // Ruta Login - numero de registro asignado 320916
-    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login');
 
     Route::middleware('auth:sanctum')->group(function () {
 
