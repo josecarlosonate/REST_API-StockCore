@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreStockMovementRequest;
 use App\Models\Product;
 use App\Actions\StockMovements\CreateStockMovementAction;
+use App\Http\Resources\StockMovementResource;
 
 class StockMovementController extends Controller
 {
@@ -16,6 +17,6 @@ class StockMovementController extends Controller
     ) {
         $data = $request->validated();
         $movement = $action->execute($product->inventory, $data);
-        dd($movement);
+        return (new StockMovementResource($movement))->response()->setStatusCode(201);
     }
 }

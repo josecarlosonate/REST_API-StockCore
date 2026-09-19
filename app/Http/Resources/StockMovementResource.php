@@ -14,6 +14,13 @@ class StockMovementResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'type' => $this->type->value,
+            'quantity' => $this->quantity,
+            'quantity_before' => $this->quantity_before,
+            'reason' => $this->reason,
+            'created_at' => $this->created_at,
+        ];
     }
 }
