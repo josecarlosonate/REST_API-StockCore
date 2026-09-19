@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\ProductSupplierController;
 use App\Http\Controllers\Api\V1\SupplierController;
 use App\Http\Controllers\Api\V1\InventoryController;
+use App\Http\Controllers\Api\V1\StockMovementController;
 
 Route::prefix('v1')->group(function () {
 
@@ -42,5 +43,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/inventories', [InventoryController::class, 'index']);
         Route::get('/products/{product}/inventory', [InventoryController::class, 'show']);
         Route::patch('/products/{product}/inventory', [InventoryController::class, 'update']);
+        // Ruta movimientos de stock
+        Route::post('/products/{product}/stock-movements', [StockMovementController::class, 'store']);
     });
 });
