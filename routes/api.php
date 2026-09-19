@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\ProductSupplierController;
 use App\Http\Controllers\Api\V1\SupplierController;
+use App\Http\Controllers\Api\V1\InventoryController;
 
 Route::prefix('v1')->group(function () {
 
@@ -36,5 +37,9 @@ Route::prefix('v1')->group(function () {
         Route::patch('/products/{product}/suppliers/{supplier}', [ProductSupplierController::class, 'update']);
         Route::delete('/products/{product}/suppliers/{supplier}', [ProductSupplierController::class, 'destroy']);
         Route::get("/products/{product}/suppliers", [ProductSupplierController::class, 'index']);
+        // Rutas de inventario
+        Route::get('/inventories', [InventoryController::class, 'index']);
+        Route::get('/products/{product}/inventory', [InventoryController::class, 'show']);
+        Route::patch('/products/{product}/inventory', [InventoryController::class, 'update']);
     });
 });
