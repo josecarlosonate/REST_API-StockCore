@@ -23,6 +23,7 @@ Route::prefix('v1')->group(function () {
         // Rutas de Categorias
         Route::get('/categories', [CategoryController::class, 'index']);
         Route::get('/categories/{category}', [CategoryController::class, 'show']);
+        Route::get('/categories/{category}/products', [CategoryController::class, 'products']);
         Route::post('/categories', [CategoryController::class, 'store']);
         Route::patch('/categories/{category}', [CategoryController::class, 'update']);
         // Ruta logout

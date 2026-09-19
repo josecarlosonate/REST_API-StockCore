@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Http\Resources\CategoryResource;
+use App\Http\Resources\ProductResource;
 use App\Models\Category;
 
 class CategoryController extends Controller
@@ -45,5 +46,11 @@ class CategoryController extends Controller
         $validated = $request->validated();
         $category->update($validated);
         return new CategoryResource($category);
+    }
+
+    public function products(Category $category)
+    {
+        $products = $category->products()->with('categories')->paginate(15);
+        return ProductResource::collection($products);
     }
 }

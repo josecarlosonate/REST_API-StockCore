@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use Laravel\Sanctum\Sanctum;
 use App\Models\User;
+use App\Models\Product;
 
 class CategoryApiTest extends TestCase
 {
@@ -176,6 +177,51 @@ class CategoryApiTest extends TestCase
             'id' => $category->id,
             'name' => 'Mis computadores',
             'slug' => 'mis-computadores'
+        ]);
+    }
+
+    public function test_can_list_products_by_category(): void
+    {
+        $categoryA = Category::factory()->create();
+        $categoryB = Category::factory()->create();
+
+        $product1 = Product::factory()->create();
+        $product2 = Product::factory()->create();
+        $product3 = Product::factory()->create();
+
+        $categoryA->products()->attach([$product1->id, $product2->id]);
+        $categoryB->products()->attach($product3->id);
+
+        $response = $this->getJson("/api/v1/categories/{$categoryA->id}/products");
+
+        $response->assertOk();
+        $response->assertJsonCount(2, 'data');
+        $response->assertJsonStructure([
+            'data' => [
+                '*' => [
+                    'id',
+                    'sku',
+                    'name',
+                    'slug',
+                    'description',
+                    'price',
+                    'is_active',
+                    'categories',
+                ],
+            ],
+            'links',
+            'meta',
+        ]);
+        $response->assertJsonFragment([
+            'id' => $product1->id,
+        ]);
+
+        $response->assertJsonFragment([
+            'id' => $product2->id,
+        ]);
+
+        $response->assertJsonMissing([
+            'id' => $product3->id,
         ]);
     }
 }
