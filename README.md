@@ -1,11 +1,8 @@
 # StockCore
 
-StockCore es una API REST orientada a la gestión de inventario y operaciones comerciales desarrollada con **Laravel**..
+API REST orientada a la gestión de inventario y operaciones comerciales desarrollada con **Laravel 13**.
 
-El proyecto busca representar la lógica de un sistema de inventario real, gestionando productos, categorías,
-proveedores, existencias y movimientos de stock, con una arquitectura preparada para incorporar posteriormente clientes, pedidos y ventas.
-
-A diferencia de una API CRUD básica, StockCore está enfocado en implementar prácticas y problemas habituales del desarrollo backend, como validación de datos, relaciones entre entidades, consistencia transaccional, control de concurrencia, seguridad, manejo estructurado de errores, paginación, filtrado y pruebas automatizadas.
+StockCore está enfocado en implementar prácticas y problemas habituales del desarrollo backend, como validación de datos, relaciones entre entidades, consistencia transaccional, control de concurrencia, seguridad, manejo estructurado de errores, paginación, filtrado y pruebas automatizadas.
 
 ---
 
@@ -29,12 +26,14 @@ Modela las operaciones principales de un sistema de gestión de inventario:
 - Permite configurar niveles mínimos y máximos de stock.
 - Registra entradas, salidas y ajustes de inventario.
 - Mantiene un historial de movimientos con el stock anterior y resultante.
+- Registra el usuario responsable de cada movimiento de inventario.
 - Permite consultar el historial general o los movimientos de un producto específico.
 - Permite filtrar los movimientos por producto y tipo de operación.
 - Valida las reglas de negocio antes de modificar las existencias.
 - Protege las actualizaciones de inventario mediante transacciones y control de concurrencia.
+- Permite registrar y administrar clientes.
 
-El proyecto evolucionará para incorporar clientes, pedidos y ventas, integrando estas operaciones con el control de inventario.
+El proyecto evolucionará para incorporar pedidos y ventas, relacionando clientes y productos con las operaciones de inventario.
 
 El objetivo del proyecto es demostrar el desarrollo de una **API REST profesional con Laravel**, aplicando diseño de APIs, relaciones con Eloquent, validación, autenticación, consistencia transaccional, control de concurrencia y pruebas automatizadas.
 
@@ -78,4 +77,14 @@ La API está versionada desde sus primeros endpoints públicos:
 
 🚧 **En desarrollo activo**
 
-StockCore se está desarrollando de forma incremental. Nuevas tecnologías, herramientas y componentes de infraestructura se incorporarán únicamente cuando sean necesarios para un caso de uso implementado.
+StockCore se desarrolla de forma incremental. Nuevas tecnologías, herramientas y componentes de infraestructura se incorporan únicamente cuando son necesarios para un caso de uso implementado.
+
+Actualmente incluye gestión de productos, categorías, proveedores, clientes e inventario, autenticación con Sanctum, trazabilidad de movimientos de stock, control de concurrencia y pruebas automatizadas.
+
+---
+
+## Autor
+
+**Jose Carlos Oñate Rodríguez**
+
+Proyecto de portafolio --- Laravel 13 / PostgreSQL / REST API
