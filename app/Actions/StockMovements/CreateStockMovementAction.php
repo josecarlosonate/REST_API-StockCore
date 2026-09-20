@@ -6,13 +6,14 @@ use App\Enums\StockMovementType;
 use App\Exceptions\InsufficientStockException;
 use App\Models\Inventory;
 use App\Models\StockMovement;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
 class CreateStockMovementAction
 {
-    public function execute(Inventory $inventory, array $data): StockMovement
+    public function execute(Inventory $inventory, User $user, array $data): StockMovement
     {
-        return DB::transaction(function () use ($inventory, $data) {
+        return DB::transaction(function () use ($inventory, $user, $data) {
 
             $lockedInventory = Inventory::query()->whereKey($inventory->id)->lockForUpdate()->firstOrFail();
 
@@ -34,6 +35,7 @@ class CreateStockMovementAction
             // crear movimiento
             $movement = StockMovement::create([
                 'inventory_id' => $lockedInventory->id,
+                'user_id' => $user->id,
                 'type' => $type,
                 'quantity' => $quantity,
                 'quantity_before' => $quantityBefore,

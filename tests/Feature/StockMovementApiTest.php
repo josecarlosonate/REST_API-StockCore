@@ -13,13 +13,15 @@ class StockMovementApiTest extends TestCase
 {
     use RefreshDatabase;
 
+    private User $user;
+
     protected function setUp(): void
     {
         parent::setUp();
 
-        $user = User::factory()->create();
+        $this->user = User::factory()->create();
 
-        Sanctum::actingAs($user);
+        Sanctum::actingAs($this->user);
     }
 
     public function test_can_create_entry_stock_movement(): void
@@ -39,12 +41,16 @@ class StockMovementApiTest extends TestCase
         $response = $this->postJson("/api/v1/products/{$product->id}/stock-movements", $payload);
 
         $response->assertCreated();
+
+        $response->assertJsonPath('data.user.id', $this->user->id);
+        $response->assertJsonPath('data.user.name', $this->user->name);
         $this->assertDatabaseHas('inventories', [
             'id' => $product->inventory->id,
             'quantity' => 15,
         ]);
         $this->assertDatabaseHas('stock_movements', [
             'inventory_id' => $product->inventory->id,
+            'user_id' => $this->user->id,
             'type' => 'entry',
             'quantity' => 5,
             'quantity_before' => 10,

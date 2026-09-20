@@ -15,6 +15,7 @@ return new class extends Migration
         Schema::create('stock_movements', function (Blueprint $table) {
             $table->id();
             $table->foreignId('inventory_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained()->restrictOnDelete();
             $table->string('type');
             $table->integer('quantity')->comment('Quantity entered for the stock movement');
             $table->integer('quantity_before')->comment('Stock quantity before the movement');

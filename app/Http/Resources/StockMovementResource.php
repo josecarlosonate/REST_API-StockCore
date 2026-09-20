@@ -22,6 +22,10 @@ class StockMovementResource extends JsonResource
             'quantity_after' => $this->quantity_after,
             'reason' => $this->reason,
             'created_at' => $this->created_at,
+            'user' => [
+                'id' => $this->user->id,
+                'name' => $this->user->name,
+            ],
             'product' => [
                 'id' => $this->inventory->product->id,
                 'sku' => $this->inventory->product->sku,
