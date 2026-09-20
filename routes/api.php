@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\CategoryController;
+use App\Http\Controllers\Api\V1\CustomerController;
 use App\Http\Controllers\Api\V1\InventoryController;
 use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\ProductSupplierController;
@@ -47,5 +48,10 @@ Route::prefix('v1')->group(function () {
         Route::post('/products/{product}/stock-movements', [StockMovementController::class, 'store']);
         Route::get('/products/{product}/stock-movements', [StockMovementController::class, 'index']);
         Route::get('/stock-movements', [StockMovementController::class, 'listMovements']);
+        // Ruta de clientes
+        Route::get('/customers', [CustomerController::class, 'index']);
+        Route::get('/customers/{customer}', [CustomerController::class, 'show']);
+        Route::post('/customers', [CustomerController::class, 'store']);
+        Route::patch('/customers/{customer}', [CustomerController::class, 'update']);
     });
 });
