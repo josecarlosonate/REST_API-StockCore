@@ -46,5 +46,6 @@ Route::prefix('v1')->group(function () {
         // Ruta movimientos de stock
         Route::post('/products/{product}/stock-movements', [StockMovementController::class, 'store']);
         Route::get('/products/{product}/stock-movements', [StockMovementController::class, 'index']);
+        Route::get('/stock-movements', [StockMovementController::class, 'listMovements']);
     });
 });
