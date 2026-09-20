@@ -13,6 +13,7 @@ class StockMovement extends Model
         'type',
         'quantity',
         'quantity_before',
+        'quantity_after',
         'reason',
     ];
 
@@ -21,7 +22,8 @@ class StockMovement extends Model
         return [
             'type' => StockMovementType::class,
             'quantity' => 'integer',
-            'quantity_before' => 'integer'
+            'quantity_before' => 'integer',
+            'quantity_after' => 'integer'
         ];
     }
 

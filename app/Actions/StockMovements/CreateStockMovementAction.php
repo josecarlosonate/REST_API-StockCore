@@ -37,6 +37,7 @@ class CreateStockMovementAction
                 'type' => $type,
                 'quantity' => $quantity,
                 'quantity_before' => $quantityBefore,
+                'quantity_after' => $quantityAfter,
                 'reason' => $data['reason'] ?? null,
             ]);
             // actualizar inventario

@@ -47,7 +47,8 @@ class StockMovementApiTest extends TestCase
             'inventory_id' => $product->inventory->id,
             'type' => 'entry',
             'quantity' => 5,
-            'quantity_before' => 10
+            'quantity_before' => 10,
+            'quantity_after' => 15
         ]);
     }
 
@@ -76,7 +77,8 @@ class StockMovementApiTest extends TestCase
             'inventory_id' => $product->inventory->id,
             'type' => 'exit',
             'quantity' => 4,
-            'quantity_before' => 10
+            'quantity_before' => 10,
+            'quantity_after' => 6
         ]);
     }
 
@@ -108,6 +110,7 @@ class StockMovementApiTest extends TestCase
             'type' => 'adjustment',
             'quantity' => 7,
             'quantity_before' => 10,
+            'quantity_after' => 7,
             'reason' => 'ajuste'
         ]);
     }
