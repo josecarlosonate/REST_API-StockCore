@@ -5,7 +5,6 @@ namespace App\Actions\Products;
 use App\Models\Product;
 use Illuminate\Support\Facades\DB;
 
-
 class CreateProductAction
 {
     public function execute(array $data): Product

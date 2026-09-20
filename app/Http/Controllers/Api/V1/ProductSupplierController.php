@@ -37,7 +37,7 @@ class ProductSupplierController extends Controller
     {
         $data = $request->validate([
             'supplier_sku' => ['sometimes', 'nullable', 'string', 'max:255'],
-            'cost' => ['sometimes', 'required', 'numeric', 'min:0', 'max:100000000']
+            'cost' => ['sometimes', 'required', 'numeric', 'min:0', 'max:100000000'],
         ]);
 
         if (empty($data)) {
@@ -48,7 +48,7 @@ class ProductSupplierController extends Controller
 
         $exists = $product->suppliers()->whereKey($supplier->id)->exists();
 
-        if (!$exists) {
+        if (! $exists) {
             return response()->json([
                 'message' => 'El proveedor no está asociado a este producto.',
             ], 404);

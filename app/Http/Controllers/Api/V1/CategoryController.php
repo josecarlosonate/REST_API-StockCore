@@ -17,6 +17,7 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::all();
+
         return CategoryResource::collection($categories);
     }
 
@@ -27,6 +28,7 @@ class CategoryController extends Controller
     {
         $validated = $request->validated();
         $category = Category::create($validated);
+
         return (new CategoryResource($category))->response()->setStatusCode(201);
     }
 
@@ -45,12 +47,14 @@ class CategoryController extends Controller
     {
         $validated = $request->validated();
         $category->update($validated);
+
         return new CategoryResource($category);
     }
 
     public function products(Category $category)
     {
         $products = $category->products()->with('categories')->paginate(15);
+
         return ProductResource::collection($products);
     }
 }

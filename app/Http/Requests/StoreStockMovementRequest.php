@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\StockMovementType;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use App\Enums\StockMovementType;
 use Illuminate\Validation\Rule;
 
 class StoreStockMovementRequest extends FormRequest
@@ -29,13 +29,13 @@ class StoreStockMovementRequest extends FormRequest
             'quantity' => [
                 'required',
                 'integer',
-                Rule::when($this->input('type') !== StockMovementType::ADJUSTMENT->value, 'min:1', 'min:0')
+                Rule::when($this->input('type') !== StockMovementType::ADJUSTMENT->value, 'min:1', 'min:0'),
             ],
             'reason' => [
                 Rule::when($this->input('type') === StockMovementType::ADJUSTMENT->value, 'required', 'nullable'),
                 'string',
-                'max:1000'
-            ]
+                'max:1000',
+            ],
         ];
     }
 }

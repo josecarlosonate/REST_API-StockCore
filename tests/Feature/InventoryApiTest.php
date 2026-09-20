@@ -2,13 +2,13 @@
 
 namespace Tests\Feature;
 
-use App\Models\Product;
-use App\Models\Inventory;
 use App\Models\Category;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
-use Laravel\Sanctum\Sanctum;
+use App\Models\Inventory;
+use App\Models\Product;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Laravel\Sanctum\Sanctum;
+use Tests\TestCase;
 
 class InventoryApiTest extends TestCase
 {
@@ -42,7 +42,7 @@ class InventoryApiTest extends TestCase
 
         $this->assertDatabaseHas('inventories', [
             'product_id' => $productId,
-            'quantity'   => 0,
+            'quantity' => 0,
         ]);
     }
 
@@ -77,7 +77,7 @@ class InventoryApiTest extends TestCase
                         'price',
                         'is_active',
                         'categories',
-                    ]
+                    ],
                 ],
             ],
             'links',
@@ -91,11 +91,11 @@ class InventoryApiTest extends TestCase
         $inventary = $product->inventory()->create([
             'product_id' => $product->id,
             'quantity' => 0,
-            'min_stock' => 5
+            'min_stock' => 5,
         ]);
 
         $payload = [
-            'max_stock' => 10
+            'max_stock' => 10,
         ];
 
         $response = $this->patchJson("/api/v1/products/$product->id/inventory", $payload);
@@ -104,13 +104,13 @@ class InventoryApiTest extends TestCase
         $response->assertJsonPaths([
             'data.id' => $inventary->id,
             'data.max_stock' => 10,
-            'data.product.id' => $product->id
+            'data.product.id' => $product->id,
         ]);
         $this->assertDatabaseHas('inventories', [
             'product_id' => $product->id,
             'quantity' => 0,
             'min_stock' => 5,
-            'max_stock' => 10
+            'max_stock' => 10,
         ]);
     }
 
@@ -121,11 +121,11 @@ class InventoryApiTest extends TestCase
             'product_id' => $product->id,
             'quantity' => 0,
             'min_stock' => 5,
-            'max_stock' => 20
+            'max_stock' => 20,
         ]);
 
         $payload = [
-            'min_stock' => 30
+            'min_stock' => 30,
         ];
 
         $response = $this->patchJson("/api/v1/products/$product->id/inventory", $payload);
@@ -136,7 +136,7 @@ class InventoryApiTest extends TestCase
             'product_id' => $product->id,
             'quantity' => 0,
             'min_stock' => 5,
-            'max_stock' => 20
+            'max_stock' => 20,
         ]);
     }
 }

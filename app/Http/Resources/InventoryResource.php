@@ -19,7 +19,7 @@ class InventoryResource extends JsonResource
             'quantity' => $this->quantity,
             'min_stock' => $this->min_stock,
             'max_stock' => $this->max_stock,
-            'product' => new ProductResource($this->whenLoaded('product'))
+            'product' => new ProductResource($this->whenLoaded('product')),
         ];
     }
 }

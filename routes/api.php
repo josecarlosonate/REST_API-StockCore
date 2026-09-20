@@ -1,13 +1,13 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\V1\ProductController;
-use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\AuthController;
-use App\Http\Controllers\Api\V1\ProductSupplierController;
-use App\Http\Controllers\Api\V1\SupplierController;
+use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\InventoryController;
+use App\Http\Controllers\Api\V1\ProductController;
+use App\Http\Controllers\Api\V1\ProductSupplierController;
 use App\Http\Controllers\Api\V1\StockMovementController;
+use App\Http\Controllers\Api\V1\SupplierController;
+use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
 
@@ -35,10 +35,10 @@ Route::prefix('v1')->group(function () {
         Route::post('/suppliers', [SupplierController::class, 'store']);
         Route::patch('/suppliers/{supplier}', [SupplierController::class, 'update']);
         // Rutas relaciones producto-proveedor
-        Route::post("/products/{product}/suppliers", [ProductSupplierController::class, 'store']);
+        Route::post('/products/{product}/suppliers', [ProductSupplierController::class, 'store']);
         Route::patch('/products/{product}/suppliers/{supplier}', [ProductSupplierController::class, 'update']);
         Route::delete('/products/{product}/suppliers/{supplier}', [ProductSupplierController::class, 'destroy']);
-        Route::get("/products/{product}/suppliers", [ProductSupplierController::class, 'index']);
+        Route::get('/products/{product}/suppliers', [ProductSupplierController::class, 'index']);
         // Rutas de inventario
         Route::get('/inventories', [InventoryController::class, 'index']);
         Route::get('/products/{product}/inventory', [InventoryController::class, 'show']);

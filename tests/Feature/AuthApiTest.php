@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class AuthApiTest extends TestCase
@@ -23,7 +22,7 @@ class AuthApiTest extends TestCase
             'password' => 'password123',
         ];
 
-        $response = $this->postJson("/api/v1/login", $payload);
+        $response = $this->postJson('/api/v1/login', $payload);
 
         $response->assertOk();
 

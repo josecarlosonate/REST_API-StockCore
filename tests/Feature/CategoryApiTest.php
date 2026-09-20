@@ -3,15 +3,14 @@
 namespace Tests\Feature;
 
 use App\Models\Category;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
-use Laravel\Sanctum\Sanctum;
-use App\Models\User;
 use App\Models\Product;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Laravel\Sanctum\Sanctum;
+use Tests\TestCase;
 
 class CategoryApiTest extends TestCase
 {
-
     use RefreshDatabase;
 
     protected function setUp(): void
@@ -39,8 +38,8 @@ class CategoryApiTest extends TestCase
                     'slug',
                     'description',
                     'is_active',
-                ]
-            ]
+                ],
+            ],
         ]);
     }
 
@@ -60,7 +59,7 @@ class CategoryApiTest extends TestCase
 
     public function test_returns_404_when_category_does_not_exist(): void
     {
-        $response = $this->getJson("/api/v1/categories/9000");
+        $response = $this->getJson('/api/v1/categories/9000');
 
         $response->assertNotFound();
     }
@@ -70,10 +69,10 @@ class CategoryApiTest extends TestCase
         $payload = [
             'name' => 'Computadores',
             'description' => 'Todos las marcas de computadores',
-            'is_active' => true
+            'is_active' => true,
         ];
 
-        $response = $this->postJson("/api/v1/categories", $payload);
+        $response = $this->postJson('/api/v1/categories', $payload);
 
         $response->assertCreated();
         $response->assertJsonStructure([
@@ -82,12 +81,12 @@ class CategoryApiTest extends TestCase
                 'name',
                 'slug',
                 'description',
-                'is_active'
-            ]
+                'is_active',
+            ],
         ]);
         $response->assertJsonFragment([
             'name' => 'Computadores',
-            'is_active' => true
+            'is_active' => true,
         ]);
         $this->assertDatabaseHas('categories', [
             'id' => $response->json('data.id'),
@@ -100,31 +99,31 @@ class CategoryApiTest extends TestCase
     {
         $payload = [
             'description' => 'Todos las marcas de computadores',
-            'is_active' => true
+            'is_active' => true,
         ];
 
-        $response = $this->postJson("/api/v1/categories", $payload);
+        $response = $this->postJson('/api/v1/categories', $payload);
 
         $response->assertUnprocessable();
         $response->assertJsonValidationErrors(['name']);
         $this->assertDatabaseMissing('categories', [
-            'description' => 'Todos las marcas de computadores'
+            'description' => 'Todos las marcas de computadores',
         ]);
     }
 
     public function test_cannot_create_category_with_duplicate_name(): void
     {
         Category::factory()->create([
-            'name' => 'Computadores'
+            'name' => 'Computadores',
         ]);
 
         $payload = [
             'name' => 'Computadores',
             'description' => 'Todos las marcas de computadores',
-            'is_active' => true
+            'is_active' => true,
         ];
 
-        $response = $this->postJson("/api/v1/categories", $payload);
+        $response = $this->postJson('/api/v1/categories', $payload);
         $response->assertUnprocessable();
         $response->assertJsonValidationErrors(['name']);
         $this->assertDatabaseCount('categories', 1);
@@ -138,7 +137,7 @@ class CategoryApiTest extends TestCase
         ]);
 
         $payload = [
-            'description' => 'Ultra mega rapidos computadores'
+            'description' => 'Ultra mega rapidos computadores',
         ];
 
         $response = $this->patchJson("/api/v1/categories/{$category->id}", $payload);
@@ -149,7 +148,7 @@ class CategoryApiTest extends TestCase
         $this->assertDatabaseHas('categories', [
             'id' => $category->id,
             'name' => 'Computadores',
-            'description' => 'Ultra mega rapidos computadores'
+            'description' => 'Ultra mega rapidos computadores',
         ]);
     }
 
@@ -163,7 +162,7 @@ class CategoryApiTest extends TestCase
         $slugOld = $category->slug;
 
         $payload = [
-            'name' => 'Mis computadores'
+            'name' => 'Mis computadores',
         ];
 
         $response = $this->patchJson("/api/v1/categories/{$category->id}", $payload);
@@ -176,7 +175,7 @@ class CategoryApiTest extends TestCase
         $this->assertDatabaseHas('categories', [
             'id' => $category->id,
             'name' => 'Mis computadores',
-            'slug' => 'mis-computadores'
+            'slug' => 'mis-computadores',
         ]);
     }
 

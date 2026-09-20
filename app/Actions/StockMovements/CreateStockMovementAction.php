@@ -2,11 +2,11 @@
 
 namespace App\Actions\StockMovements;
 
-use App\Models\Inventory;
-use Illuminate\Support\Facades\DB;
 use App\Enums\StockMovementType;
 use App\Exceptions\InsufficientStockException;
+use App\Models\Inventory;
 use App\Models\StockMovement;
+use Illuminate\Support\Facades\DB;
 
 class CreateStockMovementAction
 {
@@ -28,7 +28,7 @@ class CreateStockMovementAction
 
             // rechazar movimiento por stock insuficiente
             if ($quantityAfter < 0) {
-                throw new InsufficientStockException();
+                throw new InsufficientStockException;
             }
 
             // crear movimiento

@@ -23,7 +23,7 @@ class StockMovement extends Model
             'type' => StockMovementType::class,
             'quantity' => 'integer',
             'quantity_before' => 'integer',
-            'quantity_after' => 'integer'
+            'quantity_after' => 'integer',
         ];
     }
 

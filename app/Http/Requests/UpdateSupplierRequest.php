@@ -50,13 +50,13 @@ class UpdateSupplierRequest extends FormRequest
                     'email',
                     'phone',
                     'address',
-                    'is_active'
+                    'is_active',
                 ];
 
                 $input = $this->all();
 
                 $hasUpdatableField = collect($fields)->contains(
-                    fn($field) => array_key_exists($field, $input)
+                    fn ($field) => array_key_exists($field, $input)
                 );
 
                 if (! $hasUpdatableField) {

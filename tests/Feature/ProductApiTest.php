@@ -2,12 +2,12 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
-use App\Models\Product;
 use App\Models\Category;
-use Laravel\Sanctum\Sanctum;
+use App\Models\Product;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Laravel\Sanctum\Sanctum;
+use Tests\TestCase;
 
 class ProductApiTest extends TestCase
 {
@@ -90,10 +90,10 @@ class ProductApiTest extends TestCase
         ]);
 
         $productId = $response->json('data.id');
-        foreach ($categories as  $category) {
+        foreach ($categories as $category) {
             $this->assertDatabaseHas('category_product', [
                 'category_id' => $category->id,
-                'product_id' =>  $productId,
+                'product_id' => $productId,
             ]);
         }
     }
