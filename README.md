@@ -1,106 +1,81 @@
 # StockCore
 
-**StockCore** is a production-oriented REST API for inventory, sales, and order
-management, built with Laravel.
+StockCore es una API REST orientada a la gestión de inventario y operaciones comerciales desarrollada con **Laravel**..
 
-The system is designed to manage the complete lifecycle of products and stock:
-from suppliers and inventory movements to customer orders, stock validation,
-and order processing.
+El proyecto busca representar la lógica de un sistema de inventario real, gestionando productos, categorías,
+proveedores, existencias y movimientos de stock, con una arquitectura preparada para incorporar posteriormente clientes, pedidos y ventas.
 
-Rather than being a simple CRUD API, StockCore focuses on solving common
-backend challenges found in real-world inventory systems, including transactional
-consistency, concurrent stock updates, role-based access control, asynchronous
-processing, caching, API security, automated testing, and observability.
+A diferencia de una API CRUD básica, StockCore está enfocado en implementar prácticas y problemas habituales del desarrollo backend, como validación de datos, relaciones entre entidades, consistencia transaccional, control de concurrencia, seguridad, manejo estructurado de errores, paginación, filtrado y pruebas automatizadas.
 
-## Core Domain
+---
 
-StockCore will provide management for:
+## Contenido
 
-- Products and categories
-- Suppliers
-- Customers
-- Inventory
-- Stock movements
-- Orders and order items
-- Users, roles, and permissions
-- Sales reports
+- [Sobre el proyecto](#sobre-el-proyecto)
+- [Stack tecnológico](#stack-tecnológico)
+- [API](#api)
+- [Estado del proyecto](#estado-del-proyecto)
 
-## Engineering Goals
+---
 
-The project is being built as a production-oriented Laravel backend with emphasis on:
+## Sobre el proyecto
 
-- RESTful API design and versioning
-- Authentication and authorization
-- Database transactions and data consistency
-- Concurrency control for inventory operations
-- Role-based access control (RBAC)
-- Asynchronous jobs and queues
-- Redis caching
-- Structured error handling
-- Filtering, sorting, and pagination
-- Automated testing
-- Static analysis and code quality
-- API documentation
-- Containerized development
-- Continuous Integration and deployment
+Modela las operaciones principales de un sistema de gestión de inventario:
 
-## Current Stack
+- Permite gestionar productos y categorías.
+- Permite registrar y administrar proveedores.
+- Permite asociar productos con categorías y proveedores.
+- Mantiene el inventario individual de cada producto.
+- Permite configurar niveles mínimos y máximos de stock.
+- Registra entradas, salidas y ajustes de inventario.
+- Mantiene un historial de movimientos con el stock anterior y resultante.
+- Permite consultar el historial general o los movimientos de un producto específico.
+- Permite filtrar los movimientos por producto y tipo de operación.
+- Valida las reglas de negocio antes de modificar las existencias.
+- Protege las actualizaciones de inventario mediante transacciones y control de concurrencia.
+
+El proyecto evolucionará para incorporar clientes, pedidos y ventas, integrando estas operaciones con el control de inventario.
+
+El objetivo del proyecto es demostrar el desarrollo de una **API REST profesional con Laravel**, aplicando diseño de APIs, relaciones con Eloquent, validación, autenticación, consistencia transaccional, control de concurrencia y pruebas automatizadas.
+
+---
+
+## Stack tecnológico
+
+### Backend
 
 - PHP 8.5
 - Laravel 13
-- PHPUnit
-
-## Planned Architecture & Tooling
-
-### Application
-
-- Laravel REST API
 - Laravel Sanctum
-- Laravel Policies
-- Spatie Laravel Permission
 
-### Data
+### Base de datos
 
 - PostgreSQL
-- Redis
 
-### Asynchronous Processing
-
-- Laravel Queues
-- Laravel Horizon
-
-### Development & Observability
-
-- Laravel Telescope
-
-### Quality
+### Testing y calidad
 
 - PHPUnit
 - Laravel Pint
-- Larastan / PHPStan
 
-### API Documentation
+### Desarrollo y herramientas
 
-- OpenAPI
-- Postman Collection
+- Composer
+- Git
+- GitHub
+- Postman
 
-### Infrastructure
-
-- Docker
-- Docker Compose
-- GitHub Actions
-- CI/CD
+---
 
 ## API
 
-The API will be versioned from its first public endpoints:
+La API está versionada desde sus primeros endpoints públicos:
 
 `/api/v1`
 
-## Project Status
+---
 
-🚧 **Under active development**
+## Estado del proyecto
 
-StockCore is being developed incrementally. Technologies listed under planned
-architecture and tooling will be incorporated only when required by an implemented
-use case.
+🚧 **En desarrollo activo**
+
+StockCore se está desarrollando de forma incremental. Nuevas tecnologías, herramientas y componentes de infraestructura se incorporarán únicamente cuando sean necesarios para un caso de uso implementado.
