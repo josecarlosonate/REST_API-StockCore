@@ -2,11 +2,11 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
-use Laravel\Sanctum\Sanctum;
 use App\Models\Supplier;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Laravel\Sanctum\Sanctum;
+use Tests\TestCase;
 
 class SupplierApiTest extends TestCase
 {
@@ -43,7 +43,7 @@ class SupplierApiTest extends TestCase
             'email' => 'ventas@techimport.com',
             'phone' => '+57 300 123 4567',
             'address' => 'Valledupar, Cesar',
-            'is_active' => true
+            'is_active' => true,
         ];
 
         $response = $this->postJson('/api/v1/suppliers', $payload);

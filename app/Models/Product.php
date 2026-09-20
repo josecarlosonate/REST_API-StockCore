@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Str;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Str;
 
 class Product extends Model
 {
@@ -49,17 +49,17 @@ class Product extends Model
         static::creating(function (Product $product) {
 
             do {
-                $sku = 'SKU-' . Str::upper(Str::random(6));
+                $sku = 'SKU-'.Str::upper(Str::random(6));
             } while (Product::where('sku', $sku)->exists());
 
             $product->sku = $sku;
-            $product->slug = Str::slug($product->name . '-' . $product->sku);
+            $product->slug = Str::slug($product->name.'-'.$product->sku);
         });
 
         static::updating(function (Product $product) {
 
             if ($product->isDirty('name')) {
-                $product->slug = Str::slug($product->name . '-' . $product->sku);
+                $product->slug = Str::slug($product->name.'-'.$product->sku);
             }
         });
     }

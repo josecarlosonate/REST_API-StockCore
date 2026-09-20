@@ -18,6 +18,7 @@ class ProductController extends Controller
     public function index()
     {
         $products = Product::with('categories')->paginate(20);
+
         return ProductResource::collection($products);
     }
 
@@ -41,6 +42,7 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         $product->load('categories');
+
         return new ProductResource($product);
     }
 

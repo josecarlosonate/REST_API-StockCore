@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Actions\StockMovements\CreateStockMovementAction;
+use App\Enums\StockMovementType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreStockMovementRequest;
-use App\Models\Product;
-use App\Actions\StockMovements\CreateStockMovementAction;
 use App\Http\Resources\StockMovementResource;
+use App\Models\Product;
 use App\Models\StockMovement;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use App\Enums\StockMovementType;
 
 class StockMovementController extends Controller
 {
     public function index(Product $product)
     {
         $stockMovements = $product->inventory->stockMovements()->latest()->paginate(15);
+
         return StockMovementResource::collection($stockMovements);
     }
 
@@ -56,6 +57,7 @@ class StockMovementController extends Controller
     ) {
         $data = $request->validated();
         $movement = $action->execute($product->inventory, $data);
+
         return (new StockMovementResource($movement))->response()->setStatusCode(201);
     }
 }

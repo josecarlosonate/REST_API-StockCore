@@ -2,12 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Models\Category;
+use App\Models\Product;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
-use App\Models\User;
-use App\Models\Category;
-use App\Models\Product;
 
 class StockMovementApiTest extends TestCase
 {
@@ -33,7 +33,7 @@ class StockMovementApiTest extends TestCase
 
         $payload = [
             'type' => 'entry',
-            'quantity' => 5
+            'quantity' => 5,
         ];
 
         $response = $this->postJson("/api/v1/products/{$product->id}/stock-movements", $payload);
@@ -48,7 +48,7 @@ class StockMovementApiTest extends TestCase
             'type' => 'entry',
             'quantity' => 5,
             'quantity_before' => 10,
-            'quantity_after' => 15
+            'quantity_after' => 15,
         ]);
     }
 
@@ -63,7 +63,7 @@ class StockMovementApiTest extends TestCase
 
         $payload = [
             'type' => 'exit',
-            'quantity' => 4
+            'quantity' => 4,
         ];
 
         $response = $this->postJson("/api/v1/products/{$product->id}/stock-movements", $payload);
@@ -78,7 +78,7 @@ class StockMovementApiTest extends TestCase
             'type' => 'exit',
             'quantity' => 4,
             'quantity_before' => 10,
-            'quantity_after' => 6
+            'quantity_after' => 6,
         ]);
     }
 
@@ -94,7 +94,7 @@ class StockMovementApiTest extends TestCase
         $payload = [
             'type' => 'adjustment',
             'quantity' => 7,
-            'reason' => 'ajuste'
+            'reason' => 'ajuste',
         ];
 
         $response = $this->postJson("/api/v1/products/{$product->id}/stock-movements", $payload);
@@ -111,7 +111,7 @@ class StockMovementApiTest extends TestCase
             'quantity' => 7,
             'quantity_before' => 10,
             'quantity_after' => 7,
-            'reason' => 'ajuste'
+            'reason' => 'ajuste',
         ]);
     }
 
@@ -126,7 +126,7 @@ class StockMovementApiTest extends TestCase
 
         $payload = [
             'type' => 'exit',
-            'quantity' => 8
+            'quantity' => 8,
         ];
 
         $response = $this->postJson("/api/v1/products/{$product->id}/stock-movements", $payload);
@@ -152,7 +152,7 @@ class StockMovementApiTest extends TestCase
 
         $payload = [
             'type' => 'adjustment',
-            'quantity' => 7
+            'quantity' => 7,
         ];
 
         $response = $this->postJson("/api/v1/products/{$product->id}/stock-movements", $payload);

@@ -13,12 +13,14 @@ class InventoryController extends Controller
     public function index()
     {
         $inventories = Inventory::with('product.categories')->paginate(15);
+
         return InventoryResource::collection($inventories);
     }
 
     public function show(Product $product)
     {
         $inventory = $product->inventory()->with('product.categories')->firstOrFail();
+
         return new InventoryResource($inventory);
     }
 
@@ -28,6 +30,7 @@ class InventoryController extends Controller
         $inventory = $product->inventory;
         $inventory->update($data);
         $inventory->load('product.categories');
+
         return new InventoryResource($inventory);
     }
 }

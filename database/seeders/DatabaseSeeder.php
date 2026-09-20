@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\User;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
@@ -15,14 +15,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        //usuario administrador
+        // usuario administrador
         User::factory()->create([
             'name' => 'Admin',
             'email' => 'admin@stockcore.test',
             'password' => Hash::make('password123'),
         ]);
 
-        //categorias y productos con inventario cero inicialmente
+        // categorias y productos con inventario cero inicialmente
         $categories = Category::factory()->count(5)->create();
         $products = Product::factory()->count(30)->create();
 

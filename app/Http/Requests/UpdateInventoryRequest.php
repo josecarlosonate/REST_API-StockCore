@@ -24,7 +24,7 @@ class UpdateInventoryRequest extends FormRequest
     {
         return [
             'min_stock' => ['sometimes', 'nullable', 'integer', 'min:0'],
-            'max_stock' => ['sometimes', 'nullable', 'integer', 'min:0']
+            'max_stock' => ['sometimes', 'nullable', 'integer', 'min:0'],
         ];
     }
 
@@ -33,7 +33,7 @@ class UpdateInventoryRequest extends FormRequest
         return [
             function ($validator) {
 
-                if (!$this->has('min_stock') && !$this->has('max_stock')) {
+                if (! $this->has('min_stock') && ! $this->has('max_stock')) {
                     $validator->errors()->add(
                         'request',
                         'Debe proporcionar al menos un campo válido para actualizar.'
@@ -58,7 +58,7 @@ class UpdateInventoryRequest extends FormRequest
                         'El rango de stock no es válido: el stock mínimo debe ser menor o igual al stock máximo.'
                     );
                 }
-            }
+            },
         ];
     }
 }

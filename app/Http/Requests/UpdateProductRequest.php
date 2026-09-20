@@ -47,15 +47,15 @@ class UpdateProductRequest extends FormRequest
 
                 $inputs = $this->all();
 
-                $hasUpdatableField = collect($fields)->contains(fn($field) => array_key_exists($field, $inputs));
+                $hasUpdatableField = collect($fields)->contains(fn ($field) => array_key_exists($field, $inputs));
 
-                if (!$hasUpdatableField) {
+                if (! $hasUpdatableField) {
                     $validator->errors()->add(
                         'request',
                         'Debe proporcionar al menos un campo válido para actualizar.'
                     );
                 }
-            }
+            },
         ];
     }
 }
