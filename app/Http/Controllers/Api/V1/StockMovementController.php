@@ -16,7 +16,7 @@ class StockMovementController extends Controller
 {
     public function index(Product $product)
     {
-        $stockMovements = $product->inventory->stockMovements()->latest()->paginate(15);
+        $stockMovements = $product->inventory->stockMovements()->with('user')->latest()->paginate(15);
 
         return StockMovementResource::collection($stockMovements);
     }
@@ -31,7 +31,7 @@ class StockMovementController extends Controller
             'product_id' => ['nullable', 'integer', 'exists:products,id'],
         ]);
 
-        $query = StockMovement::query()->with('inventory.product');
+        $query = StockMovement::query()->with(['inventory.product', 'user']);
 
         if (isset($data['type'])) {
             $query->where('type', $data['type']);
@@ -56,7 +56,7 @@ class StockMovementController extends Controller
         CreateStockMovementAction $action
     ) {
         $data = $request->validated();
-        $movement = $action->execute($product->inventory, $data);
+        $movement = $action->execute($product->inventory, $request->user(), $data);
 
         return (new StockMovementResource($movement))->response()->setStatusCode(201);
     }
