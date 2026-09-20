@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Category;
+use App\Models\Customer;
 use App\Models\Product;
 use App\Models\Supplier;
 use App\Models\User;
@@ -21,6 +22,15 @@ class DatabaseSeeder extends Seeder
             'name' => 'Admin',
             'email' => 'admin@stockcore.test',
             'password' => Hash::make('password123'),
+        ]);
+
+        Customer::factory()->count(15)->create();
+
+        Customer::factory()->count(5)->create([
+            'document_type' => null,
+            'document_number' => null,
+            'email' => null,
+            'address' => null,
         ]);
 
         // categorias y productos con inventario cero inicialmente
