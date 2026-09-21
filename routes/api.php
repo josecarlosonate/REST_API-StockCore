@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\CustomerController;
 use App\Http\Controllers\Api\V1\InventoryController;
+use App\Http\Controllers\Api\V1\OrderController;
 use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\ProductSupplierController;
 use App\Http\Controllers\Api\V1\StockMovementController;
@@ -53,5 +54,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/customers/{customer}', [CustomerController::class, 'show']);
         Route::post('/customers', [CustomerController::class, 'store']);
         Route::patch('/customers/{customer}', [CustomerController::class, 'update']);
+        // Ruta de ordenes de venta
+        Route::post('/orders', [OrderController::class, 'store']);
     });
 });
