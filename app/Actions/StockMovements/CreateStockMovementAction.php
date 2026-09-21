@@ -29,7 +29,9 @@ class CreateStockMovementAction
 
             // rechazar movimiento por stock insuficiente
             if ($quantityAfter < 0) {
-                throw new InsufficientStockException;
+                throw new InsufficientStockException(
+                    "Stock insuficiente. Disponible: {$quantityBefore}, solicitado: {$quantity}."
+                );
             }
 
             // crear movimiento
