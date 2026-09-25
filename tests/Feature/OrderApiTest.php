@@ -6,25 +6,12 @@ use App\Models\Customer;
 use App\Models\Inventory;
 use App\Models\Order;
 use App\Models\Product;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Laravel\Sanctum\Sanctum;
-use Tests\TestCase;
+use Tests\ApiTestCase;
 
-class OrderApiTest extends TestCase
+class OrderApiTest extends ApiTestCase
 {
     use RefreshDatabase;
-
-    protected User $user;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->user = User::factory()->create();
-
-        Sanctum::actingAs($this->user);
-    }
 
     public function test_authenticated_user_can_list_orders(): void
     {

@@ -9,11 +9,14 @@ use App\Http\Resources\OrderResource;
 use App\Models\Customer;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class OrderController extends Controller
 {
     public function index(Request $request)
     {
+        Gate::authorize('orders.view');
+
         $data = $request->validate([
             'customer_id' => ['nullable', 'integer', 'exists:customers,id'],
             'user_id' => ['nullable', 'integer', 'exists:users,id'],
@@ -53,6 +56,8 @@ class OrderController extends Controller
 
     public function show(Order $order)
     {
+        Gate::authorize('orders.view');
+
         $order->load(['customer', 'user', 'items.product']);
 
         return new OrderResource($order);

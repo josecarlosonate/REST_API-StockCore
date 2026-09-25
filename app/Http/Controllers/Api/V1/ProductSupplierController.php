@@ -8,11 +8,14 @@ use App\Http\Requests\UpdateProductSupplierRequest;
 use App\Http\Resources\ProductSupplierResource;
 use App\Models\Product;
 use App\Models\Supplier;
+use Illuminate\Support\Facades\Gate;
 
 class ProductSupplierController extends Controller
 {
     public function index(Product $product)
     {
+        Gate::authorize('suppliers.view');
+
         $suppliers = $product->suppliers()->get();
 
         return ProductSupplierResource::collection($suppliers);
@@ -58,6 +61,8 @@ class ProductSupplierController extends Controller
 
     public function destroy(Product $product, Supplier $supplier)
     {
+        Gate::authorize('product-suppliers.manage');
+
         $detached = $product->suppliers()->detach($supplier->id);
 
         if ($detached === 0) {

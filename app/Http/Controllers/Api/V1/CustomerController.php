@@ -7,11 +7,14 @@ use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
 use App\Http\Resources\CustomerResource;
 use App\Models\Customer;
+use Illuminate\Support\Facades\Gate;
 
 class CustomerController extends Controller
 {
     public function index()
     {
+        Gate::authorize('customers.view');
+
         $customers = Customer::paginate(15);
 
         return CustomerResource::collection($customers);
@@ -19,6 +22,8 @@ class CustomerController extends Controller
 
     public function show(Customer $customer)
     {
+        Gate::authorize('customers.view');
+
         return new CustomerResource($customer);
     }
 

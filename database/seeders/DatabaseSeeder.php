@@ -2,13 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Category;
-use App\Models\Customer;
-use App\Models\Product;
-use App\Models\Supplier;
-use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -17,49 +11,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // usuario administrador
-        User::factory()->create([
-            'name' => 'Admin',
-            'email' => 'admin@stockcore.test',
-            'password' => Hash::make('password123'),
+        $this->call([
+            RoleAndPermissionSeeder::class,
+            UserSeeder::class,
+            CustomerSeeder::class,
+            ProductCatalogSeeder::class,
         ]);
-
-        Customer::factory()->count(15)->create();
-
-        Customer::factory()->count(5)->create([
-            'document_type' => null,
-            'document_number' => null,
-            'email' => null,
-            'address' => null,
-        ]);
-
-        // categorias y productos con inventario cero inicialmente
-        $categories = Category::factory()->count(5)->create();
-        $products = Product::factory()->count(30)->create();
-        $suppliers = Supplier::factory()->count(5)->create();
-
-        $products->each(function (Product $product) use ($categories, $suppliers) {
-            $randomCategories = $categories->random(random_int(1, 5));
-            $categoriesIds = $randomCategories->pluck('id')->toArray();
-
-            $product->categories()->attach($categoriesIds);
-
-            $randomSuppliers = $suppliers->random(random_int(1, 3));
-
-            $supplierData = [];
-
-            foreach ($randomSuppliers as $supplier) {
-                $supplierData[$supplier->id] = [
-                    'supplier_sku' => fake()->unique()->bothify('SUP-#####'),
-                    'cost' => fake()->randomFloat(2, 1000, 100000),
-                ];
-            }
-
-            $product->suppliers()->attach($supplierData);
-
-            $product->inventory()->create([
-                'quantity' => 0,
-            ]);
-        });
     }
 }

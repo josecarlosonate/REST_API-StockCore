@@ -14,7 +14,7 @@ class StoreStockMovementRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user()->can('stock-movements.create');
     }
 
     /**

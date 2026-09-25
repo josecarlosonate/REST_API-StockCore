@@ -7,11 +7,14 @@ use App\Http\Requests\UpdateInventoryRequest;
 use App\Http\Resources\InventoryResource;
 use App\Models\Inventory;
 use App\Models\Product;
+use Illuminate\Support\Facades\Gate;
 
 class InventoryController extends Controller
 {
     public function index()
     {
+        Gate::authorize('inventory.view');
+
         $inventories = Inventory::with('product.categories')->paginate(15);
 
         return InventoryResource::collection($inventories);
@@ -19,6 +22,8 @@ class InventoryController extends Controller
 
     public function show(Product $product)
     {
+        Gate::authorize('inventory.view');
+
         $inventory = $product->inventory()->with('product.categories')->firstOrFail();
 
         return new InventoryResource($inventory);

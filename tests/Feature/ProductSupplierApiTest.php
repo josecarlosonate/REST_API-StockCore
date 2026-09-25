@@ -4,23 +4,12 @@ namespace Tests\Feature;
 
 use App\Models\Product;
 use App\Models\Supplier;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Laravel\Sanctum\Sanctum;
-use Tests\TestCase;
+use Tests\ApiTestCase;
 
-class ProductSupplierApiTest extends TestCase
+class ProductSupplierApiTest extends ApiTestCase
 {
     use RefreshDatabase;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $user = User::factory()->create();
-
-        Sanctum::actingAs($user);
-    }
 
     public function test_can_list_product_suppliers(): void
     {
