@@ -12,12 +12,31 @@ use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $data = $request->validate([
+            'customer_id' => ['nullable', 'integer', 'exists:customers,id'],
+            'user_id' => ['nullable', 'integer', 'exists:users,id'],
+            'order_id' => ['nullable', 'integer', 'exists:orders,id'],
+        ]);
+
+        $query = Order::query()->with(['customer', 'user', 'items.product']);
+
+        if (isset($data['customer_id'])) {
+            $query->where('customer_id', $data['customer_id']);
+        }
+
+        if (isset($data['user_id'])) {
+            $query->where('user_id', $data['user_id']);
+        }
+
+        if (isset($data['order_id'])) {
+            $query->where('id', $data['order_id']);
+        }
+
+        $orders = $query->latest()->paginate(15);
+
+        return OrderResource::collection($orders);
     }
 
     public function store(StoreOrderRequest $request, CreateOrderAction $action)
@@ -32,27 +51,10 @@ class OrderController extends Controller
         return (new OrderResource($order))->response()->setStatusCode(201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Order $order)
     {
-        //
-    }
+        $order->load(['customer', 'user', 'items.product']);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Order $order)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Order $order)
-    {
-        //
+        return new OrderResource($order);
     }
 }
