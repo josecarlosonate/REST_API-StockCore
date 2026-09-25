@@ -7,11 +7,14 @@ use App\Http\Requests\StoreSupplierRequest;
 use App\Http\Requests\UpdateSupplierRequest;
 use App\Http\Resources\SupplierResource;
 use App\Models\Supplier;
+use Illuminate\Support\Facades\Gate;
 
 class SupplierController extends Controller
 {
     public function index()
     {
+        Gate::authorize('suppliers.view');
+
         $suppliers = Supplier::paginate(15);
 
         return SupplierResource::collection($suppliers);
@@ -19,6 +22,8 @@ class SupplierController extends Controller
 
     public function show(Supplier $supplier)
     {
+        Gate::authorize('suppliers.view');
+
         return new SupplierResource($supplier);
     }
 

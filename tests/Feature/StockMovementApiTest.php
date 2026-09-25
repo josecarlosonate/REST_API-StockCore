@@ -4,25 +4,12 @@ namespace Tests\Feature;
 
 use App\Models\Category;
 use App\Models\Product;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Laravel\Sanctum\Sanctum;
-use Tests\TestCase;
+use Tests\ApiTestCase;
 
-class StockMovementApiTest extends TestCase
+class StockMovementApiTest extends ApiTestCase
 {
     use RefreshDatabase;
-
-    private User $user;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->user = User::factory()->create();
-
-        Sanctum::actingAs($this->user);
-    }
 
     public function test_can_create_entry_stock_movement(): void
     {

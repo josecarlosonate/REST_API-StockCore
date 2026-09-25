@@ -9,6 +9,7 @@ use App\Http\Requests\UpdateProductRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class ProductController extends Controller
 {
@@ -17,6 +18,8 @@ class ProductController extends Controller
      */
     public function index()
     {
+        Gate::authorize('products.view');
+
         $products = Product::with('categories')->paginate(20);
 
         return ProductResource::collection($products);
@@ -41,6 +44,8 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
+        Gate::authorize('products.view');
+
         $product->load('categories');
 
         return new ProductResource($product);

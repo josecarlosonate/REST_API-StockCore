@@ -18,29 +18,26 @@ class RoleAndPermissionSeeder extends Seeder
             'products.view',
             'products.create',
             'products.update',
-            'products.delete',
+            'product-suppliers.manage',
 
             // Categories
             'categories.view',
             'categories.create',
             'categories.update',
-            'categories.delete',
 
             // Suppliers
             'suppliers.view',
             'suppliers.create',
             'suppliers.update',
-            'suppliers.delete',
 
             // Customers
             'customers.view',
             'customers.create',
             'customers.update',
-            'customers.delete',
 
             // Inventory
             'inventory.view',
-            'inventory.adjust',
+            'inventory.update',
 
             // Stock movements
             'stock-movements.view',
@@ -54,6 +51,7 @@ class RoleAndPermissionSeeder extends Seeder
         $roles = [
             'seller' => [
                 'products.view',
+                'categories.view',
                 'customers.view',
                 'customers.create',
                 'customers.update',
@@ -65,7 +63,7 @@ class RoleAndPermissionSeeder extends Seeder
             'warehouse' => [
                 'products.view',
                 'inventory.view',
-                'inventory.adjust',
+                'inventory.update',
                 'stock-movements.view',
                 'stock-movements.create',
             ],

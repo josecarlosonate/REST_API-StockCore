@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateCategoryRequest;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\ProductResource;
 use App\Models\Category;
+use Illuminate\Support\Facades\Gate;
 
 class CategoryController extends Controller
 {
@@ -16,6 +17,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
+        Gate::authorize('categories.view');
+
         $categories = Category::all();
 
         return CategoryResource::collection($categories);
@@ -26,8 +29,8 @@ class CategoryController extends Controller
      */
     public function store(StoreCategoryRequest $request)
     {
-        $validated = $request->validated();
-        $category = Category::create($validated);
+        $data = $request->validated();
+        $category = Category::create($data);
 
         return (new CategoryResource($category))->response()->setStatusCode(201);
     }
@@ -37,6 +40,8 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
+        Gate::authorize('categories.view');
+
         return new CategoryResource($category);
     }
 
@@ -45,14 +50,16 @@ class CategoryController extends Controller
      */
     public function update(UpdateCategoryRequest $request, Category $category)
     {
-        $validated = $request->validated();
-        $category->update($validated);
+        $data = $request->validated();
+        $category->update($data);
 
         return new CategoryResource($category);
     }
 
     public function products(Category $category)
     {
+        Gate::authorize('categories.view');
+
         $products = $category->products()->with('categories')->paginate(15);
 
         return ProductResource::collection($products);

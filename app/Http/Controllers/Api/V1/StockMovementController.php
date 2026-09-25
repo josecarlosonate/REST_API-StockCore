@@ -10,12 +10,15 @@ use App\Http\Resources\StockMovementResource;
 use App\Models\Product;
 use App\Models\StockMovement;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 
 class StockMovementController extends Controller
 {
     public function index(Product $product)
     {
+        Gate::authorize('stock-movements.view');
+
         $stockMovements = $product->inventory->stockMovements()->with('user')->latest()->paginate(15);
 
         return StockMovementResource::collection($stockMovements);
@@ -23,6 +26,8 @@ class StockMovementController extends Controller
 
     public function listMovements(Request $request)
     {
+        Gate::authorize('stock-movements.view');
+
         $data = $request->validate([
             'type' => [
                 'nullable',
@@ -43,9 +48,7 @@ class StockMovementController extends Controller
             });
         }
 
-        $movements = $query
-            ->latest()
-            ->paginate(15);
+        $movements = $query->latest()->paginate(15);
 
         return StockMovementResource::collection($movements);
     }
