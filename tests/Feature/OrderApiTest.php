@@ -64,7 +64,7 @@ class OrderApiTest extends TestCase
 
         $product = Product::factory()->create(['price' => 10000]);
 
-        Inventory::create([
+        $inventory = Inventory::create([
             'product_id' => $product->id,
             'quantity'   => 50,
         ]);
@@ -106,7 +106,7 @@ class OrderApiTest extends TestCase
         ]);
 
         $this->assertDatabaseHas('stock_movements', [
-            'product_id' => $product->id,
+            'inventory_id' => $inventory->id,
             'user_id' => $this->user->id,
             'type' => 'exit',
             'quantity' => 2,
