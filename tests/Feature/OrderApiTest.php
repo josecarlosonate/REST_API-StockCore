@@ -4,8 +4,8 @@ namespace Tests\Feature;
 
 use App\Models\Customer;
 use App\Models\Inventory;
-use App\Models\Product;
 use App\Models\Order;
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
@@ -14,6 +14,7 @@ use Tests\TestCase;
 class OrderApiTest extends TestCase
 {
     use RefreshDatabase;
+
     protected User $user;
 
     protected function setUp(): void
@@ -42,7 +43,7 @@ class OrderApiTest extends TestCase
     {
         $order = Order::create([
             'user_id' => $this->user->id,
-            'total'   => 50000,
+            'total' => 50000,
         ]);
 
         $response = $this->getJson("/api/v1/orders/{$order->id}");
@@ -66,7 +67,7 @@ class OrderApiTest extends TestCase
 
         $inventory = Inventory::create([
             'product_id' => $product->id,
-            'quantity'   => 50,
+            'quantity' => 50,
         ]);
 
         $payload = [
@@ -74,7 +75,7 @@ class OrderApiTest extends TestCase
             'items' => [
                 [
                     'product_id' => $product->id,
-                    'quantity'   => 2,
+                    'quantity' => 2,
                 ],
             ],
         ];
@@ -94,15 +95,15 @@ class OrderApiTest extends TestCase
             ->assertJsonPath('data.items.0.subtotal', '20000.00');
 
         $this->assertDatabaseHas('orders', [
-            'user_id'     => $this->user->id,
+            'user_id' => $this->user->id,
             'customer_id' => $customer->id,
-            'total'       => 20000,
+            'total' => 20000,
         ]);
 
         // Verificar que se descontó el stock
         $this->assertDatabaseHas('inventories', [
             'product_id' => $product->id,
-            'quantity'   => 48,
+            'quantity' => 48,
         ]);
 
         $this->assertDatabaseHas('stock_movements', [
@@ -120,14 +121,14 @@ class OrderApiTest extends TestCase
         $product = Product::factory()->create(['price' => 15000]);
         Inventory::create([
             'product_id' => $product->id,
-            'quantity'   => 10,
+            'quantity' => 10,
         ]);
 
         $payload = [
             'items' => [
                 [
                     'product_id' => $product->id,
-                    'quantity'   => 1,
+                    'quantity' => 1,
                 ],
             ],
         ];
@@ -142,14 +143,14 @@ class OrderApiTest extends TestCase
         $product = Product::factory()->create(['price' => 10000]);
         Inventory::create([
             'product_id' => $product->id,
-            'quantity'   => 1, // solo 1 disponible
+            'quantity' => 1, // solo 1 disponible
         ]);
 
         $payload = [
             'items' => [
                 [
                     'product_id' => $product->id,
-                    'quantity'   => 5, // pide 5
+                    'quantity' => 5, // pide 5
                 ],
             ],
         ];
