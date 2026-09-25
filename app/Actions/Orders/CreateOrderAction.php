@@ -34,7 +34,7 @@ class CreateOrderAction
 
             $total = 0;
             foreach ($items as $item) {
-                $product = $products[$item['product_id']];
+                $product =  $products->get($item['product_id']);
 
                 // El precio siempre proviene del producto.
                 // Nunca confiamos en un precio enviado por el cliente.
