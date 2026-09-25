@@ -56,5 +56,7 @@ Route::prefix('v1')->group(function () {
         Route::patch('/customers/{customer}', [CustomerController::class, 'update']);
         // Ruta de ordenes de venta
         Route::post('/orders', [OrderController::class, 'store']);
+        Route::get('/orders', [OrderController::class, 'index']);
+        Route::get('/orders/{order}', [OrderController::class, 'show']);
     });
 });

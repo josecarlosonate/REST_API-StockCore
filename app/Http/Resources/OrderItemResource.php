@@ -22,7 +22,7 @@ class OrderItemResource extends JsonResource
             'product' => [
                 'id' => $this->product->id,
                 'name' => $this->product->name,
-                'sku' => $this->sku,
+                'sku' => $this->product->sku,
             ],
         ];
     }
