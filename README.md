@@ -12,6 +12,7 @@ StockCore es un sistema backend diseñado para gestionar productos, categorías,
 El proyecto está enfocado en aplicar conceptos de backend utilizados en aplicaciones reales, incluyendo autenticación, autorización basada en roles y permisos, operaciones transaccionales, control de concurrencia sobre inventario, integridad de datos y pruebas automatizadas.
 
 > Proyecto de portafolio enfocado en desarrollo backend profesional con Laravel.
+
 ---
 
 ## Contenido
@@ -30,7 +31,7 @@ El proyecto está enfocado en aplicar conceptos de backend utilizados en aplicac
 - [Datos iniciales](#datos-iniciales)
 - [Cómo probar StockCore](#cómo-probar-stockcore)
 - [Autor](#autor)
-  
+
 ---
 
 ## Sobre el proyecto
@@ -115,17 +116,17 @@ Protección de los recursos y operaciones disponibles en la API:
 
 ## Stack tecnológico
 
-| Área | Tecnología |
-|---|---|
-| Backend | PHP 8.3+ · Laravel 13 |
-| Base de datos | PostgreSQL |
-| Autenticación | Laravel Sanctum |
-| Roles y permisos | Spatie Laravel Permission |
-| Testing | PHPUnit |
-| Calidad de código | Laravel Pint |
-| Documentación API | Fern · Postman |
-| Gestión de dependencias | Composer |
-| Control de versiones | Git · GitHub |
+| Área                    | Tecnología                |
+| ----------------------- | ------------------------- |
+| Backend                 | PHP 8.3+ · Laravel 13     |
+| Base de datos           | PostgreSQL                |
+| Autenticación           | Laravel Sanctum           |
+| Roles y permisos        | Spatie Laravel Permission |
+| Testing                 | PHPUnit                   |
+| Calidad de código       | Laravel Pint              |
+| Documentación API       | Fern · Postman            |
+| Gestión de dependencias | Composer                  |
+| Control de versiones    | Git · GitHub              |
 
 ---
 
@@ -153,15 +154,15 @@ JSON Response
 
 ### Responsabilidades
 
-| Componente | Responsabilidad |
-|---|---|
-| **Routes** | Definen los endpoints, versionado y middleware de la API. |
-| **Form Requests** | Validan los datos de entrada y autorizan operaciones cuando corresponde. |
-| **Controllers** | Reciben las solicitudes y coordinan el flujo HTTP. |
-| **Actions** | Encapsulan operaciones de negocio que requieren múltiples pasos o modelos. |
-| **Models** | Representan las entidades, relaciones y comportamiento mediante Eloquent. |
-| **API Resources** | Transforman los modelos en respuestas JSON consistentes. |
-| **Database** | Refuerza la integridad de los datos mediante claves foráneas, índices y restricciones. |
+| Componente        | Responsabilidad                                                                        |
+| ----------------- | -------------------------------------------------------------------------------------- |
+| **Routes**        | Definen los endpoints, versionado y middleware de la API.                              |
+| **Form Requests** | Validan los datos de entrada y autorizan operaciones cuando corresponde.               |
+| **Controllers**   | Reciben las solicitudes y coordinan el flujo HTTP.                                     |
+| **Actions**       | Encapsulan operaciones de negocio que requieren múltiples pasos o modelos.             |
+| **Models**        | Representan las entidades, relaciones y comportamiento mediante Eloquent.              |
+| **API Resources** | Transforman los modelos en respuestas JSON consistentes.                               |
+| **Database**      | Refuerza la integridad de los datos mediante claves foráneas, índices y restricciones. |
 
 ---
 
@@ -212,33 +213,34 @@ StockCore combina autenticación mediante Laravel Sanctum con roles y permisos a
 La autorización se aplica según el tipo de operación: los `Form Requests` autorizan solicitudes de escritura y Laravel Gate protege consultas cuando corresponde.
 
 ---
+
 ## Roles y permisos
 
 StockCore implementa control de acceso basado en roles y permisos mediante **Spatie Laravel Permission**.
 
 El sistema incluye tres roles principales:
 
-| Rol | Responsabilidad |
-|---|---|
-| **Admin** | Administración completa del sistema, catálogo, proveedores, clientes, inventario y ventas. |
-| **Seller** | Gestión de clientes y ventas, con acceso de consulta al catálogo e inventario. |
-| **Warehouse** | Gestión operativa del inventario y sus movimientos. |
+| Rol           | Responsabilidad                                                                            |
+| ------------- | ------------------------------------------------------------------------------------------ |
+| **Admin**     | Administración completa del sistema, catálogo, proveedores, clientes, inventario y ventas. |
+| **Seller**    | Gestión de clientes y ventas, con acceso de consulta al catálogo e inventario.             |
+| **Warehouse** | Gestión operativa del inventario y sus movimientos.                                        |
 
 ### Acceso por módulo
 
-| Módulo | Admin | Seller | Warehouse |
-|---|:---:|:---:|:---:|
-| Productos | Gestión | Consulta | Consulta |
-| Categorías | Gestión | Consulta | — |
-| Proveedores | Gestión | — | — |
-| Producto–Proveedor | Gestión | — | — |
-| Clientes | Gestión | Gestión | — |
-| Inventario | Gestión | Consulta | Gestión |
-| Movimientos de stock | Gestión | — | Gestión |
-| Pedidos | Gestión | Gestión | — |
+| Módulo               |  Admin  |  Seller  | Warehouse |
+| -------------------- | :-----: | :------: | :-------: |
+| Productos            | Gestión | Consulta | Consulta  |
+| Categorías           | Gestión | Consulta |     —     |
+| Proveedores          | Gestión |    —     |     —     |
+| Producto–Proveedor   | Gestión |    —     |     —     |
+| Clientes             | Gestión | Gestión  |     —     |
+| Inventario           | Gestión | Consulta |  Gestión  |
+| Movimientos de stock | Gestión |    —     |  Gestión  |
+| Pedidos              | Gestión | Gestión  |     —     |
 
 > Los permisos se aplican por operación, por lo que el acceso a un módulo no implica necesariamente permisos de creación o modificación sobre todos sus recursos.
-> 
+>
 > **Nota:** las existencias no se modifican directamente desde el inventario. Las entradas, salidas y ajustes se realizan mediante movimientos de stock para conservar la trazabilidad de cada cambio.
 
 ---
@@ -359,7 +361,9 @@ La documentación interactiva permite consultar los endpoints disponibles, pará
 
 📚 [Consultar documentación interactiva de StockCore](https://stockcore-api.docs.buildwithfern.com)
 
-Para realizar pruebas manuales durante el desarrollo también se utiliza **Postman**.
+También se incluye una colección de **Postman** preparada para importar y probar los endpoints de la API.
+
+📦 [Descargar colección de Postman](docs/StockCoreAPI.postman_collection.json)
 
 Los endpoints protegidos requieren autenticación mediante un token generado al iniciar sesión con Laravel Sanctum:
 

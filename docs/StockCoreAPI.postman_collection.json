@@ -1,0 +1,1044 @@
+{
+  "info": {
+    "_postman_id": "940b4c6d-f420-40e6-b84e-ddb4b82e47c0",
+    "name": "StockCoreAPI",
+    "description": "## StockCoreAPI\n\nStockCoreAPI is a RESTful API for managing the core operations of an inventory and sales system. It covers product catalog management, supplier relationships, inventory tracking, stock movements, customers, and sales orders.\n\n### Authentication\n\nAll requests are authenticated using a **Bearer Token**. Use the `Login` endpoint to obtain a token and `Logout` to invalidate it. The token is stored in the `{{token}}` collection variable and automatically applied to every request.\n\n### Modules\n\n| Folder | Description |\n| --- | --- |\n| **Auth** | Login and logout endpoints for session management. |\n| **Products** | Create, retrieve, and update products in the catalog. |\n| **Categories** | Manage product categories and browse products by category. |\n| **Suppliers** | Manage supplier records and associate them with products. |\n| **Product Suppliers** | Attach, update, and detach supplier relationships for individual products. |\n| **Inventory** | View and update stock levels for each product. |\n| **Stock Movements** | Record and query stock entries and exits across the system. |\n| **Customers** | Manage customer records linked to stock operations. |\n| **Orders** | Create and query sales orders and their associated items. |\n\n### Variables\n\n- `{{base_url}}` — The base URL of the API server.\n    \n- `{{token}}` — The Bearer token used for authentication.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "14768163"
+  },
+  "item": [
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "List Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/products",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "products"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "2",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "**Endpoint:** `http://localhost:8000/api/v1/products`\n\nReturns a paginated list of all products in the catalog.\n\n## Query Parameters\n\n| Parameter | Type | Required | Description |\n|---|---|---|---|\n| `page` | integer | — | Page number for pagination (default: `1`) |\n\n## Response Schema `200 OK`\n\n```json\n{\n    \"data\": [\n        {\n            \"id\": \"integer\",\n            \"name\": \"string\",\n            \"description\": \"string\",\n            \"price\": \"number\",\n            \"is_active\": \"boolean\",\n            \"created_at\": \"string (ISO 8601)\",\n            \"updated_at\": \"string (ISO 8601)\",\n            \"categories\": [\n                {\n                    \"id\": \"integer\",\n                    \"name\": \"string\"\n                }\n            ]\n        }\n    ],\n    \"links\": {\n        \"first\": \"string\",\n        \"last\": \"string\",\n        \"prev\": \"string | null\",\n        \"next\": \"string | null\"\n    },\n    \"meta\": {\n        \"current_page\": \"integer\",\n        \"from\": \"integer\",\n        \"last_page\": \"integer\",\n        \"per_page\": \"integer\",\n        \"to\": \"integer\",\n        \"total\": \"integer\"\n    }\n}\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Show Product",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/products/:product",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "products",
+                ":product"
+              ],
+              "variable": [
+                {
+                  "key": "product",
+                  "value": "2"
+                }
+              ]
+            },
+            "description": "**Endpoint:** `http://localhost:8000/api/v1/products/:product`\n\nReturns the details of a single product by its ID.\n\n## Path Parameters\n\n| Parameter | Type | Required | Description |\n|---|---|---|---|\n| `:product` | integer | ✓ | The ID of the product |\n\n## Response Schema `200 OK`\n\n```json\n{\n    \"data\": {\n        \"id\": \"integer\",\n        \"name\": \"string\",\n        \"description\": \"string\",\n        \"price\": \"number\",\n        \"is_active\": \"boolean\",\n        \"created_at\": \"string (ISO 8601)\",\n        \"updated_at\": \"string (ISO 8601)\",\n        \"categories\": [\n            {\n                \"id\": \"integer\",\n                \"name\": \"string\"\n            }\n        ]\n    }\n}\n```\n\n## Error Responses\n\n| Status | Description |\n|---|---|\n| `404 Not Found` | Product does not exist |"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Product",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"OLED Display Module\",\r\n    \"description\": \"I2C 128x64 pixels screen for microcontrollers\",\r\n    \"price\": 18500.00,\r\n    \"is_active\": true,\r\n    \"categories\": [2, 4]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/products",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "products"
+              ]
+            },
+            "description": "**Endpoint:** `http://localhost:8000/api/v1/products`\n\nCreates a new product in the catalog. Optionally assigns it to one or more categories.\n\n## Request Body\n\n| Field | Type | Required | Description |\n|---|---|---|---|\n| `name` | string | ✓ | Product name |\n| `description` | string | — | Product description |\n| `price` | number | ✓ | Unit price (decimal) |\n| `is_active` | boolean | — | Whether the product is active (default: `true`) |\n| `categories` | integer[] | — | Array of category IDs to assign |\n\n### Example\n```json\n{\n    \"name\": \"OLED Display Module\",\n    \"description\": \"I2C 128x64 pixels screen for microcontrollers\",\n    \"price\": 18500.00,\n    \"is_active\": true,\n    \"categories\": [2, 4]\n}\n```\n\n## Response Schema `201 Created`\n\n```json\n{\n    \"data\": {\n        \"id\": \"integer\",\n        \"name\": \"string\",\n        \"description\": \"string\",\n        \"price\": \"number\",\n        \"is_active\": \"boolean\",\n        \"created_at\": \"string (ISO 8601)\",\n        \"updated_at\": \"string (ISO 8601)\",\n        \"categories\": [\n            {\n                \"id\": \"integer\",\n                \"name\": \"string\"\n            }\n        ]\n    }\n}\n```\n\n## Error Responses\n\n| Status | Description |\n|---|---|\n| `422 Unprocessable Entity` | Validation error — missing or invalid fields |"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Product",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Test postman\",\r\n    \"price\": 5000,\r\n    \"description\": \"Producto actualizado por postman\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/products/:product",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "products",
+                ":product"
+              ],
+              "query": [
+                {
+                  "key": "",
+                  "value": "",
+                  "disabled": true
+                }
+              ],
+              "variable": [
+                {
+                  "key": "product",
+                  "value": "2"
+                }
+              ]
+            },
+            "description": "**Endpoint:** `http://localhost:8000/api/v1/products/:product`\n\nPartially updates an existing product. Only the fields provided in the request body will be modified.\n\n## Path Parameters\n\n| Parameter | Type | Required | Description |\n|---|---|---|---|\n| `:product` | integer | ✓ | The ID of the product to update |\n\n## Request Body\n\nAll fields are optional. Only include the fields you want to update.\n\n| Field | Type | Description |\n|---|---|---|\n| `name` | string | New product name |\n| `description` | string | New product description |\n| `price` | number | New unit price |\n| `is_active` | boolean | Active status |\n| `categories` | integer[] | Replace assigned category IDs |\n\n### Example\n```json\n{\n    \"name\": \"Test postman\",\n    \"price\": 5000,\n    \"description\": \"Producto actualizado por postman\"\n}\n```\n\n## Response Schema `200 OK`\n\n```json\n{\n    \"data\": {\n        \"id\": \"integer\",\n        \"name\": \"string\",\n        \"description\": \"string\",\n        \"price\": \"number\",\n        \"is_active\": \"boolean\",\n        \"created_at\": \"string (ISO 8601)\",\n        \"updated_at\": \"string (ISO 8601)\",\n        \"categories\": [\n            {\n                \"id\": \"integer\",\n                \"name\": \"string\"\n            }\n        ]\n    }\n}\n```\n\n## Error Responses\n\n| Status | Description |\n|---|---|\n| `404 Not Found` | Product does not exist |\n| `422 Unprocessable Entity` | Validation error |"
+          },
+          "response": []
+        }
+      ],
+      "description": "Manages product catalog information, including SKU, price, status, categories, and inventory association."
+    },
+    {
+      "name": "Categories",
+      "item": [
+        {
+          "name": "List Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/categories",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "categories"
+              ]
+            },
+            "description": "**Endpoint:** `http://localhost:8000/api/v1/categories`\n\nReturns a list of all product categories.\n\n## Response Schema `200 OK`\n\n```json\n{\n    \"data\": [\n        {\n            \"id\": \"integer\",\n            \"name\": \"string\",\n            \"description\": \"string\",\n            \"is_active\": \"boolean\",\n            \"created_at\": \"string (ISO 8601)\",\n            \"updated_at\": \"string (ISO 8601)\"\n        }\n    ]\n}\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Show Category",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/categories/:category",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "categories",
+                ":category"
+              ],
+              "variable": [
+                {
+                  "key": "category",
+                  "value": "3"
+                }
+              ]
+            },
+            "description": "**Endpoint:** `http://localhost:8000/api/v1/categories/:category`\n\nReturns the details of a single category by its ID.\n\n## Path Parameters\n\n| Parameter | Type | Required | Description |\n|---|---|---|---|\n| `:category` | integer | ✓ | The ID of the category |\n\n## Response Schema `200 OK`\n\n```json\n{\n    \"data\": {\n        \"id\": \"integer\",\n        \"name\": \"string\",\n        \"description\": \"string\",\n        \"is_active\": \"boolean\",\n        \"created_at\": \"string (ISO 8601)\",\n        \"updated_at\": \"string (ISO 8601)\"\n    }\n}\n```\n\n## Error Responses\n\n| Status | Description |\n|---|---|\n| `404 Not Found` | Category does not exist |"
+          },
+          "response": []
+        },
+        {
+          "name": "List Category Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/categories/:category/products",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "categories",
+                ":category",
+                "products"
+              ],
+              "variable": [
+                {
+                  "key": "category",
+                  "value": "3"
+                }
+              ]
+            },
+            "description": "**Endpoint:** `http://localhost:8000/api/v1/categories/:category/products`\n\nReturns a paginated list of products belonging to a specific category.\n\n## Path Parameters\n\n| Parameter | Type | Required | Description |\n|---|---|---|---|\n| `:category` | integer | ✓ | The ID of the category |\n\n## Query Parameters\n\n| Parameter | Type | Required | Description |\n|---|---|---|---|\n| `page` | integer | — | Page number for pagination (default: `1`) |\n\n## Response Schema `200 OK`\n\n```json\n{\n    \"data\": [\n        {\n            \"id\": \"integer\",\n            \"name\": \"string\",\n            \"description\": \"string\",\n            \"price\": \"number\",\n            \"is_active\": \"boolean\",\n            \"created_at\": \"string (ISO 8601)\",\n            \"updated_at\": \"string (ISO 8601)\"\n        }\n    ],\n    \"links\": {\n        \"first\": \"string\",\n        \"last\": \"string\",\n        \"prev\": \"string | null\",\n        \"next\": \"string | null\"\n    },\n    \"meta\": {\n        \"current_page\": \"integer\",\n        \"from\": \"integer\",\n        \"last_page\": \"integer\",\n        \"per_page\": \"integer\",\n        \"to\": \"integer\",\n        \"total\": \"integer\"\n    }\n}\n```\n\n## Error Responses\n\n| Status | Description |\n|---|---|\n| `404 Not Found` | Category does not exist |"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Category",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Computadores\",\r\n    \"description\": \"pixels screen for microcontrollers\",\r\n    \"is_active\": true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/categories",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "categories"
+              ]
+            },
+            "description": "**Endpoint:** `http://localhost:8000/api/v1/categories`\n\nCreates a new product category.\n\n## Request Body\n\n| Field | Type | Required | Description |\n|---|---|---|---|\n| `name` | string | ✓ | Category name |\n| `description` | string | — | Category description |\n| `is_active` | boolean | — | Whether the category is active (default: `true`) |\n\n### Example\n```json\n{\n    \"name\": \"Computadores\",\n    \"description\": \"Equipos de cómputo y accesorios\",\n    \"is_active\": true\n}\n```\n\n## Response Schema `201 Created`\n\n```json\n{\n    \"data\": {\n        \"id\": \"integer\",\n        \"name\": \"string\",\n        \"description\": \"string\",\n        \"is_active\": \"boolean\",\n        \"created_at\": \"string (ISO 8601)\",\n        \"updated_at\": \"string (ISO 8601)\"\n    }\n}\n```\n\n## Error Responses\n\n| Status | Description |\n|---|---|\n| `422 Unprocessable Entity` | Validation error — missing or invalid fields |"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Category",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Procesadores intel\",\r\n    \"description\": \"test de actualizacion desde postman\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/categories/:category",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "categories",
+                ":category"
+              ],
+              "variable": [
+                {
+                  "key": "category",
+                  "value": "3"
+                }
+              ]
+            },
+            "description": "**Endpoint:** `http://localhost:8000/api/v1/categories/:category`\n\nPartially updates an existing category. Only the fields provided in the request body will be modified.\n\n## Path Parameters\n\n| Parameter | Type | Required | Description |\n| --- | --- | --- | --- |\n| `:category` | integer | ✓ | The ID of the category to update |\n\n## Request Body\n\nAll fields are optional. Only include the fields you want to update.\n\n| Field | Type | Description |\n| --- | --- | --- |\n| `name` | string | New category name |\n| `description` | string | New category description |\n| `is_active` | boolean | Active status |\n\n### Example\n\n``` json\n{\n    \"name\": \"Procesadores Intel\",\n    \"description\": \"Procesadores de escritorio y portátil\"\n}\n\n ```\n\n## Response Schema `200 OK`\n\n``` json\n{\n    \"data\": {\n        \"id\": \"integer\",\n        \"name\": \"string\",\n        \"description\": \"string\",\n        \"is_active\": \"boolean\",\n        \"created_at\": \"string (ISO 8601)\",\n        \"updated_at\": \"string (ISO 8601)\"\n    }\n}\n\n ```\n\n## Error Responses\n\n| Status | Description |\n| --- | --- |\n| `404 Not Found` | Category does not exist |\n| `422 Unprocessable Entity` | Validation error |"
+          },
+          "response": []
+        }
+      ],
+      "description": "Manages product categories used to organize and classify the catalog."
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\r\n\r\npm.collectionVariables.set('token', response.token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"seller@stockcore.test\",\r\n    \"password\": \"password123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "login"
+              ]
+            },
+            "description": "**Endpoint:** `http://localhost:8000/api/v1/login`\n\nAuthenticates a user and returns a Bearer token to be used in subsequent requests. The token is automatically stored in the `{{token}}` collection variable.\n\n## Request Body\n\n| Field | Type | Required | Description |\n|---|---|---|---|\n| `email` | string | ✓ | Registered user email address |\n| `password` | string | ✓ | User password |\n\n### Example\n```json\n{\n    \"email\": \"admin@stockcore.test\",\n    \"password\": \"password123\"\n}\n```\n\n## Response Schema `200 OK`\n\n```json\n{\n    \"token\": \"string\"\n}\n```\n\n| Field | Type | Description |\n|---|---|---|\n| `token` | string | Bearer token for authenticated requests |\n\n## Error Responses\n\n| Status | Description |\n|---|---|\n| `401 Unauthorized` | Invalid credentials |\n| `422 Unprocessable Entity` | Validation error — missing or malformed fields |"
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/logout",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "logout"
+              ]
+            },
+            "description": "**Endpoint:** `http://localhost:8000/api/v1/logout`\n\nInvalidates the current Bearer token, ending the authenticated session. Requires a valid `{{token}}` in the Authorization header.\n\n## Response Schema `200 OK`\n\n```json\n{\n    \"message\": \"string\"\n}\n```\n\n| Field | Type | Description |\n|---|---|---|\n| `message` | string | Confirmation message, e.g. `\"Logged out successfully\"` |\n\n## Error Responses\n\n| Status | Description |\n|---|---|\n| `401 Unauthorized` | Token is missing or already invalidated |"
+          },
+          "response": []
+        }
+      ],
+      "description": "Handles user authentication, access token generation, and logout using Laravel Sanctum."
+    },
+    {
+      "name": "Suppliers",
+      "item": [
+        {
+          "name": "List Suppliers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/suppliers",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "suppliers"
+              ]
+            },
+            "description": "**Endpoint:** `http://localhost:8000/api/v1/suppliers`\n\nReturns a paginated list of all registered suppliers.\n\n## Query Parameters\n\n| Parameter | Type | Required | Description |\n|---|---|---|---|\n| `page` | integer | — | Page number for pagination (default: `1`) |\n\n## Response Schema `200 OK`\n\n```json\n{\n    \"data\": [\n        {\n            \"id\": \"integer\",\n            \"name\": \"string\",\n            \"tax_id\": \"string\",\n            \"email\": \"string\",\n            \"phone\": \"string\",\n            \"address\": \"string\",\n            \"is_active\": \"boolean\",\n            \"created_at\": \"string (ISO 8601)\",\n            \"updated_at\": \"string (ISO 8601)\"\n        }\n    ],\n    \"links\": {\n        \"first\": \"string\",\n        \"last\": \"string\",\n        \"prev\": \"string | null\",\n        \"next\": \"string | null\"\n    },\n    \"meta\": {\n        \"current_page\": \"integer\",\n        \"from\": \"integer\",\n        \"last_page\": \"integer\",\n        \"per_page\": \"integer\",\n        \"to\": \"integer\",\n        \"total\": \"integer\"\n    }\n}\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Supplier",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"TechImport Colombia\",\r\n    \"tax_id\": \"900123456\",\r\n    \"email\": \"ventas@techimport.com\",\r\n    \"phone\": \"+57 300 123 4567\",\r\n    \"address\": \"Valledupar, Cesar\",\r\n    \"is_active\": true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/suppliers",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "suppliers"
+              ]
+            },
+            "description": "**Endpoint:** `http://localhost:8000/api/v1/suppliers`\n\nCreates a new supplier record.\n\n## Request Body\n\n| Field | Type | Required | Description |\n|---|---|---|---|\n| `name` | string | ✓ | Supplier company name |\n| `tax_id` | string | — | Tax identification number (NIT / RUT) |\n| `email` | string | — | Contact email address |\n| `phone` | string | — | Contact phone number |\n| `address` | string | — | Physical address |\n| `is_active` | boolean | — | Whether the supplier is active (default: `true`) |\n\n### Example\n```json\n{\n    \"name\": \"TechImport Colombia\",\n    \"tax_id\": \"900123456\",\n    \"email\": \"ventas@techimport.com\",\n    \"phone\": \"+57 300 123 4567\",\n    \"address\": \"Valledupar, Cesar\",\n    \"is_active\": true\n}\n```\n\n## Response Schema `201 Created`\n\n```json\n{\n    \"data\": {\n        \"id\": \"integer\",\n        \"name\": \"string\",\n        \"tax_id\": \"string\",\n        \"email\": \"string\",\n        \"phone\": \"string\",\n        \"address\": \"string\",\n        \"is_active\": \"boolean\",\n        \"created_at\": \"string (ISO 8601)\",\n        \"updated_at\": \"string (ISO 8601)\"\n    }\n}\n```\n\n## Error Responses\n\n| Status | Description |\n|---|---|\n| `422 Unprocessable Entity` | Validation error — missing or invalid fields |"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Supplier",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"TechImport Colombia 2\",\r\n    \"phone\": \"300000000\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/suppliers/:supplier",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "suppliers",
+                ":supplier"
+              ],
+              "variable": [
+                {
+                  "key": "supplier",
+                  "value": "2"
+                }
+              ]
+            },
+            "description": "**Endpoint:** `http://localhost:8000/api/v1/suppliers/:supplier`\n\nPartially updates an existing supplier. Only the fields provided in the request body will be modified.\n\n## Path Parameters\n\n| Parameter | Type | Required | Description |\n|---|---|---|---|\n| `:supplier` | integer | ✓ | The ID of the supplier to update |\n\n## Request Body\n\nAll fields are optional. Only include the fields you want to update.\n\n| Field | Type | Description |\n|---|---|---|\n| `name` | string | New supplier name |\n| `tax_id` | string | New tax identification number |\n| `email` | string | New contact email |\n| `phone` | string | New contact phone |\n| `address` | string | New physical address |\n| `is_active` | boolean | Active status |\n\n### Example\n```json\n{\n    \"name\": \"TechImport Colombia 2\",\n    \"phone\": \"300000000\"\n}\n```\n\n## Response Schema `200 OK`\n\n```json\n{\n    \"data\": {\n        \"id\": \"integer\",\n        \"name\": \"string\",\n        \"tax_id\": \"string\",\n        \"email\": \"string\",\n        \"phone\": \"string\",\n        \"address\": \"string\",\n        \"is_active\": \"boolean\",\n        \"created_at\": \"string (ISO 8601)\",\n        \"updated_at\": \"string (ISO 8601)\"\n    }\n}\n```\n\n## Error Responses\n\n| Status | Description |\n|---|---|\n| `404 Not Found` | Supplier does not exist |\n| `422 Unprocessable Entity` | Validation error |"
+          },
+          "response": []
+        }
+      ],
+      "description": "Manages supplier information used to source products in the catalog."
+    },
+    {
+      "name": "Product Suppliers",
+      "item": [
+        {
+          "name": "Attach Supplier",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"supplier_id\": 5,\r\n    \"supplier_sku\": \"SUP-002\",\r\n    \"cost\": 85000\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/products/:product/suppliers",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "products",
+                ":product",
+                "suppliers"
+              ],
+              "variable": [
+                {
+                  "key": "product",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "**Endpoint:** `http://localhost:8000/api/v1/products/:product/suppliers`\n\nAssociates a supplier with a product, setting the supplier-specific SKU and cost.\n\n## Path Parameters\n\n| Parameter | Type | Required | Description |\n|---|---|---|---|\n| `:product` | integer | ✓ | The ID of the product |\n\n## Request Body\n\n| Field | Type | Required | Description |\n|---|---|---|---|\n| `supplier_id` | integer | ✓ | The ID of the supplier to attach |\n| `supplier_sku` | string | — | Supplier's internal SKU for this product |\n| `cost` | number | — | Purchase cost from this supplier |\n\n### Example\n```json\n{\n    \"supplier_id\": 5,\n    \"supplier_sku\": \"SUP-002\",\n    \"cost\": 85000\n}\n```\n\n## Response Schema `201 Created`\n\n```json\n{\n    \"data\": {\n        \"id\": \"integer\",\n        \"name\": \"string\",\n        \"tax_id\": \"string\",\n        \"email\": \"string\",\n        \"phone\": \"string\",\n        \"is_active\": \"boolean\",\n        \"pivot\": {\n            \"product_id\": \"integer\",\n            \"supplier_id\": \"integer\",\n            \"supplier_sku\": \"string\",\n            \"cost\": \"number\"\n        }\n    }\n}\n```\n\n## Error Responses\n\n| Status | Description |\n|---|---|\n| `404 Not Found` | Product or supplier does not exist |\n| `409 Conflict` | Supplier is already attached to this product |\n| `422 Unprocessable Entity` | Validation error |"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Product Supplier",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"supplier_sku\": \"SUP-TEST-003\",\r\n  \"cost\": 90500\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/products/:product/suppliers/:supplier",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "products",
+                ":product",
+                "suppliers",
+                ":supplier"
+              ],
+              "variable": [
+                {
+                  "key": "product",
+                  "value": "1"
+                },
+                {
+                  "key": "supplier",
+                  "value": "5"
+                }
+              ]
+            },
+            "description": "**Endpoint:** `http://localhost:8000/api/v1/products/:product/suppliers/:supplier`\n\nUpdates the relationship data (SKU and/or cost) between a product and one of its suppliers.\n\n## Path Parameters\n\n| Parameter | Type | Required | Description |\n|---|---|---|---|\n| `:product` | integer | ✓ | The ID of the product |\n| `:supplier` | integer | ✓ | The ID of the supplier |\n\n## Request Body\n\nAll fields are optional. Only include the fields you want to update.\n\n| Field | Type | Description |\n|---|---|---|\n| `supplier_sku` | string | New supplier SKU for this product |\n| `cost` | number | New purchase cost from this supplier |\n\n### Example\n```json\n{\n    \"supplier_sku\": \"SUP-TEST-003\",\n    \"cost\": 90500\n}\n```\n\n## Response Schema `200 OK`\n\n```json\n{\n    \"data\": {\n        \"id\": \"integer\",\n        \"name\": \"string\",\n        \"tax_id\": \"string\",\n        \"email\": \"string\",\n        \"phone\": \"string\",\n        \"is_active\": \"boolean\",\n        \"pivot\": {\n            \"product_id\": \"integer\",\n            \"supplier_id\": \"integer\",\n            \"supplier_sku\": \"string\",\n            \"cost\": \"number\"\n        }\n    }\n}\n```\n\n## Error Responses\n\n| Status | Description |\n|---|---|\n| `404 Not Found` | Product or supplier relationship does not exist |\n| `422 Unprocessable Entity` | Validation error |"
+          },
+          "response": []
+        },
+        {
+          "name": "Detach Supplier",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/products/:product/suppliers/:supplier",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "products",
+                ":product",
+                "suppliers",
+                ":supplier"
+              ],
+              "variable": [
+                {
+                  "key": "product",
+                  "value": "1"
+                },
+                {
+                  "key": "supplier",
+                  "value": "5"
+                }
+              ]
+            },
+            "description": "**Endpoint:** `http://localhost:8000/api/v1/products/:product/suppliers/:supplier`\n\nRemoves the association between a product and a supplier.\n\n## Path Parameters\n\n| Parameter | Type | Required | Description |\n|---|---|---|---|\n| `:product` | integer | ✓ | The ID of the product |\n| `:supplier` | integer | ✓ | The ID of the supplier to detach |\n\n## Response Schema `200 OK`\n\n```json\n{\n    \"message\": \"string\"\n}\n```\n\n| Field | Type | Description |\n|---|---|---|\n| `message` | string | Confirmation message, e.g. `\"Supplier detached successfully\"` |\n\n## Error Responses\n\n| Status | Description |\n|---|---|\n| `404 Not Found` | Product or supplier relationship does not exist |"
+          },
+          "response": []
+        },
+        {
+          "name": "List Product Suppliers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/products/:product/suppliers",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "products",
+                ":product",
+                "suppliers"
+              ],
+              "variable": [
+                {
+                  "key": "product",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "**Endpoint:** `http://localhost:8000/api/v1/products/:product/suppliers`\n\nReturns all suppliers associated with a specific product, including the SKU and cost for each supplier relationship.\n\n## Path Parameters\n\n| Parameter | Type | Required | Description |\n|---|---|---|---|\n| `:product` | integer | ✓ | The ID of the product |\n\n## Response Schema `200 OK`\n\n```json\n{\n    \"data\": [\n        {\n            \"id\": \"integer\",\n            \"name\": \"string\",\n            \"tax_id\": \"string\",\n            \"email\": \"string\",\n            \"phone\": \"string\",\n            \"is_active\": \"boolean\",\n            \"pivot\": {\n                \"product_id\": \"integer\",\n                \"supplier_id\": \"integer\",\n                \"supplier_sku\": \"string\",\n                \"cost\": \"number\"\n            }\n        }\n    ]\n}\n```\n\n## Error Responses\n\n| Status | Description |\n|---|---|\n| `404 Not Found` | Product does not exist |"
+          },
+          "response": []
+        }
+      ],
+      "description": "Manages the relationship between products and suppliers, including supplier-specific SKU and cost information."
+    },
+    {
+      "name": "Inventory",
+      "item": [
+        {
+          "name": "List Inventories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/inventories",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "inventories"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "2",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "**Endpoint:** `http://localhost:8000/api/v1/inventories`\n\nReturns a paginated list of inventory records for all products, showing current stock levels and thresholds.\n\n## Query Parameters\n\n| Parameter | Type | Required | Description |\n|---|---|---|---|\n| `page` | integer | — | Page number for pagination (default: `1`) |\n\n## Response Schema `200 OK`\n\n```json\n{\n    \"data\": [\n        {\n            \"id\": \"integer\",\n            \"product_id\": \"integer\",\n            \"quantity\": \"integer\",\n            \"min_stock\": \"integer\",\n            \"max_stock\": \"integer\",\n            \"created_at\": \"string (ISO 8601)\",\n            \"updated_at\": \"string (ISO 8601)\",\n            \"product\": {\n                \"id\": \"integer\",\n                \"name\": \"string\",\n                \"price\": \"number\",\n                \"is_active\": \"boolean\"\n            }\n        }\n    ],\n    \"links\": {\n        \"first\": \"string\",\n        \"last\": \"string\",\n        \"prev\": \"string | null\",\n        \"next\": \"string | null\"\n    },\n    \"meta\": {\n        \"current_page\": \"integer\",\n        \"from\": \"integer\",\n        \"last_page\": \"integer\",\n        \"per_page\": \"integer\",\n        \"to\": \"integer\",\n        \"total\": \"integer\"\n    }\n}\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Show Product Inventory",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/products/:product/inventory",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "products",
+                ":product",
+                "inventory"
+              ],
+              "variable": [
+                {
+                  "key": "product",
+                  "value": "2"
+                }
+              ]
+            },
+            "description": "**Endpoint:** `http://localhost:8000/api/v1/products/:product/inventory`\n\nReturns the inventory record for a specific product, including current stock quantity and configured thresholds.\n\n## Path Parameters\n\n| Parameter | Type | Required | Description |\n|---|---|---|---|\n| `:product` | integer | ✓ | The ID of the product |\n\n## Response Schema `200 OK`\n\n```json\n{\n    \"data\": {\n        \"id\": \"integer\",\n        \"product_id\": \"integer\",\n        \"quantity\": \"integer\",\n        \"min_stock\": \"integer\",\n        \"max_stock\": \"integer\",\n        \"created_at\": \"string (ISO 8601)\",\n        \"updated_at\": \"string (ISO 8601)\",\n        \"product\": {\n            \"id\": \"integer\",\n            \"name\": \"string\",\n            \"price\": \"number\",\n            \"is_active\": \"boolean\"\n        }\n    }\n}\n```\n\n## Error Responses\n\n| Status | Description |\n|---|---|\n| `404 Not Found` | Product does not exist |"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Product Inventory",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"min_stock\": 6,\r\n    \"max_stock\": 20\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/products/:product/inventory",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "products",
+                ":product",
+                "inventory"
+              ],
+              "variable": [
+                {
+                  "key": "product",
+                  "value": "2"
+                }
+              ]
+            },
+            "description": "**Endpoint:** `http://localhost:8000/api/v1/products/:product/inventory`\n\nUpdates the stock threshold configuration (minimum and/or maximum stock levels) for a specific product's inventory. This does not directly modify the stock quantity — use Stock Movements for that.\n\n## Path Parameters\n\n| Parameter | Type | Required | Description |\n|---|---|---|---|\n| `:product` | integer | ✓ | The ID of the product |\n\n## Request Body\n\nAll fields are optional. Only include the fields you want to update.\n\n| Field | Type | Description |\n|---|---|---|\n| `min_stock` | integer | Minimum stock level before a low-stock alert is triggered |\n| `max_stock` | integer | Maximum stock level allowed |\n\n### Example\n```json\n{\n    \"min_stock\": 5,\n    \"max_stock\": 20\n}\n```\n\n## Response Schema `200 OK`\n\n```json\n{\n    \"data\": {\n        \"id\": \"integer\",\n        \"product_id\": \"integer\",\n        \"quantity\": \"integer\",\n        \"min_stock\": \"integer\",\n        \"max_stock\": \"integer\",\n        \"created_at\": \"string (ISO 8601)\",\n        \"updated_at\": \"string (ISO 8601)\",\n        \"product\": {\n            \"id\": \"integer\",\n            \"name\": \"string\",\n            \"price\": \"number\",\n            \"is_active\": \"boolean\"\n        }\n    }\n}\n```\n\n## Error Responses\n\n| Status | Description |\n|---|---|\n| `404 Not Found` | Product does not exist |\n| `422 Unprocessable Entity` | Validation error |"
+          },
+          "response": []
+        }
+      ],
+      "description": "Manages product inventory levels and stock thresholds. Stock quantities are modified through stock movements to preserve traceability."
+    },
+    {
+      "name": "Stock Movements",
+      "item": [
+        {
+          "name": "Create Stock Movement",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n   \"type\": \"adjustment\",\r\n    \"quantity\": 15,\r\n    \"reason\": \"Ajuste de inventario inicial\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/products/:product/stock-movements",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "products",
+                ":product",
+                "stock-movements"
+              ],
+              "variable": [
+                {
+                  "key": "product",
+                  "value": "5"
+                }
+              ]
+            },
+            "description": "**Endpoint:** `http://localhost:8000/api/v1/products/:product/stock-movements`\n\nRecords a stock movement for a specific product, adjusting its inventory quantity. Movements can represent entries, exits, or manual adjustments.\n\n## Path Parameters\n\n| Parameter | Type | Required | Description |\n|---|---|---|---|\n| `:product` | integer | ✓ | The ID of the product |\n\n## Request Body\n\n| Field | Type | Required | Description |\n|---|---|---|---|\n| `type` | string | ✓ | Movement type: `entry`, `exit`, or `adjustment` |\n| `quantity` | integer | ✓ | Number of units. Use positive values for entries/adjustments and negative for exits |\n| `reason` | string | — | Description or reason for the movement |\n\n### Example\n```json\n{\n    \"type\": \"adjustment\",\n    \"quantity\": 15,\n    \"reason\": \"Ajuste de inventario\"\n}\n```\n\n## Response Schema `201 Created`\n\n```json\n{\n    \"data\": {\n        \"id\": \"integer\",\n        \"product_id\": \"integer\",\n        \"type\": \"string\",\n        \"quantity\": \"integer\",\n        \"reason\": \"string\",\n        \"created_at\": \"string (ISO 8601)\",\n        \"updated_at\": \"string (ISO 8601)\"\n    }\n}\n```\n\n## Error Responses\n\n| Status | Description |\n|---|---|\n| `404 Not Found` | Product does not exist |\n| `422 Unprocessable Entity` | Validation error — missing or invalid fields |"
+          },
+          "response": []
+        },
+        {
+          "name": "List Product Stock Movements",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/products/:product/stock-movements",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "products",
+                ":product",
+                "stock-movements"
+              ],
+              "variable": [
+                {
+                  "key": "product",
+                  "value": "2"
+                }
+              ]
+            },
+            "description": "**Endpoint:** `http://localhost:8000/api/v1/products/:product/stock-movements`\n\nReturns a paginated list of all stock movements for a specific product.\n\n## Path Parameters\n\n| Parameter | Type | Required | Description |\n|---|---|---|---|\n| `:product` | integer | ✓ | The ID of the product |\n\n## Query Parameters\n\n| Parameter | Type | Required | Description |\n|---|---|---|---|\n| `page` | integer | — | Page number for pagination (default: `1`) |\n| `type` | string | — | Filter by movement type: `entry`, `exit`, or `adjustment` |\n\n## Response Schema `200 OK`\n\n```json\n{\n    \"data\": [\n        {\n            \"id\": \"integer\",\n            \"product_id\": \"integer\",\n            \"type\": \"string\",\n            \"quantity\": \"integer\",\n            \"reason\": \"string\",\n            \"created_at\": \"string (ISO 8601)\",\n            \"updated_at\": \"string (ISO 8601)\"\n        }\n    ],\n    \"links\": {\n        \"first\": \"string\",\n        \"last\": \"string\",\n        \"prev\": \"string | null\",\n        \"next\": \"string | null\"\n    },\n    \"meta\": {\n        \"current_page\": \"integer\",\n        \"from\": \"integer\",\n        \"last_page\": \"integer\",\n        \"per_page\": \"integer\",\n        \"to\": \"integer\",\n        \"total\": \"integer\"\n    }\n}\n```\n\n## Error Responses\n\n| Status | Description |\n|---|---|\n| `404 Not Found` | Product does not exist |"
+          },
+          "response": []
+        },
+        {
+          "name": "List Stock Movements",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/stock-movements",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "stock-movements"
+              ],
+              "query": [
+                {
+                  "key": "type",
+                  "value": "adjustment",
+                  "disabled": true
+                },
+                {
+                  "key": "product_id",
+                  "value": "2",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "**Endpoint:** `http://localhost:8000/api/v1/stock-movements`\n\nReturns a paginated list of all stock movements across the system. Supports filtering by product and movement type.\n\n## Query Parameters\n\n| Parameter | Type | Required | Description |\n|---|---|---|---|\n| `page` | integer | — | Page number for pagination (default: `1`) |\n| `product_id` | integer | — | Filter movements by product ID |\n| `type` | string | — | Filter by movement type: `entry`, `exit`, or `adjustment` |\n\n## Response Schema `200 OK`\n\n```json\n{\n    \"data\": [\n        {\n            \"id\": \"integer\",\n            \"product_id\": \"integer\",\n            \"type\": \"string\",\n            \"quantity\": \"integer\",\n            \"reason\": \"string\",\n            \"created_at\": \"string (ISO 8601)\",\n            \"updated_at\": \"string (ISO 8601)\",\n            \"product\": {\n                \"id\": \"integer\",\n                \"name\": \"string\"\n            }\n        }\n    ],\n    \"links\": {\n        \"first\": \"string\",\n        \"last\": \"string\",\n        \"prev\": \"string | null\",\n        \"next\": \"string | null\"\n    },\n    \"meta\": {\n        \"current_page\": \"integer\",\n        \"from\": \"integer\",\n        \"last_page\": \"integer\",\n        \"per_page\": \"integer\",\n        \"to\": \"integer\",\n        \"total\": \"integer\"\n    }\n}\n```"
+          },
+          "response": []
+        }
+      ],
+      "description": "Records inventory entries, exits, and adjustments while preserving the previous and resulting stock levels."
+    },
+    {
+      "name": "Customers",
+      "item": [
+        {
+          "name": "List Customers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/customers",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "customers"
+              ]
+            },
+            "description": "**Endpoint:** `http://localhost:8000/api/v1/customers`\n\nReturns a paginated list of all registered customers.\n\n## Query Parameters\n\n| Parameter | Type | Required | Description |\n|---|---|---|---|\n| `page` | integer | — | Page number for pagination (default: `1`) |\n\n## Response Schema `200 OK`\n\n```json\n{\n    \"data\": [\n        {\n            \"id\": \"integer\",\n            \"name\": \"string\",\n            \"document_type\": \"string\",\n            \"document_number\": \"string\",\n            \"created_at\": \"string (ISO 8601)\",\n            \"updated_at\": \"string (ISO 8601)\"\n        }\n    ],\n    \"links\": {\n        \"first\": \"string\",\n        \"last\": \"string\",\n        \"prev\": \"string | null\",\n        \"next\": \"string | null\"\n    },\n    \"meta\": {\n        \"current_page\": \"integer\",\n        \"from\": \"integer\",\n        \"last_page\": \"integer\",\n        \"per_page\": \"integer\",\n        \"to\": \"integer\",\n        \"total\": \"integer\"\n    }\n}\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Show Customer",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/customers/:customer",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "customers",
+                ":customer"
+              ],
+              "variable": [
+                {
+                  "key": "customer",
+                  "value": "2"
+                }
+              ]
+            },
+            "description": "**Endpoint:** `http://localhost:8000/api/v1/customers/:customer`\n\nReturns the details of a single customer by their ID.\n\n## Path Parameters\n\n| Parameter | Type | Required | Description |\n|---|---|---|---|\n| `:customer` | integer | ✓ | The ID of the customer |\n\n## Response Schema `200 OK`\n\n```json\n{\n    \"data\": {\n        \"id\": \"integer\",\n        \"name\": \"string\",\n        \"document_type\": \"string\",\n        \"document_number\": \"string\",\n        \"created_at\": \"string (ISO 8601)\",\n        \"updated_at\": \"string (ISO 8601)\"\n    }\n}\n```\n\n## Error Responses\n\n| Status | Description |\n|---|---|\n| `404 Not Found` | Customer does not exist |"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Customer",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"María Rodríguez\",\r\n    \"document_type\": \"DNI\",\r\n    \"document_number\": \"123456\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/customers",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "customers"
+              ]
+            },
+            "description": "**Endpoint:** `http://localhost:8000/api/v1/customers`\n\nCreates a new customer record.\n\n## Request Body\n\n| Field | Type | Required | Description |\n|---|---|---|---|\n| `name` | string | ✓ | Full name of the customer |\n| `document_type` | string | ✓ | Type of identification document (e.g. `CC`, `DNI`, `NIT`, `CE`) |\n| `document_number` | string | ✓ | Identification document number |\n\n### Example\n```json\n{\n    \"name\": \"María Rodríguez\",\n    \"document_type\": \"DNI\",\n    \"document_number\": \"123456\"\n}\n```\n\n## Response Schema `201 Created`\n\n```json\n{\n    \"data\": {\n        \"id\": \"integer\",\n        \"name\": \"string\",\n        \"document_type\": \"string\",\n        \"document_number\": \"string\",\n        \"created_at\": \"string (ISO 8601)\",\n        \"updated_at\": \"string (ISO 8601)\"\n    }\n}\n```\n\n## Error Responses\n\n| Status | Description |\n|---|---|\n| `422 Unprocessable Entity` | Validation error — missing or invalid fields |"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Customer",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Jhon Doe\",\r\n    \"document_type\": \"CC\",\r\n    \"document_number\": \"1234560\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/customers/:customer",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "customers",
+                ":customer"
+              ],
+              "variable": [
+                {
+                  "key": "customer",
+                  "value": "2"
+                }
+              ]
+            },
+            "description": "**Endpoint:** `http://localhost:8000/api/v1/customers/:customer`\n\nPartially updates an existing customer record. Only the fields provided in the request body will be modified.\n\n## Path Parameters\n\n| Parameter | Type | Required | Description |\n|---|---|---|---|\n| `:customer` | integer | ✓ | The ID of the customer to update |\n\n## Request Body\n\nAll fields are optional. Only include the fields you want to update.\n\n| Field | Type | Description |\n|---|---|---|\n| `name` | string | New full name |\n| `document_type` | string | New document type (e.g. `CC`, `DNI`, `NIT`, `CE`) |\n| `document_number` | string | New document number |\n\n### Example\n```json\n{\n    \"name\": \"Jhon Doe\",\n    \"document_type\": \"CC\",\n    \"document_number\": \"1234560\"\n}\n```\n\n## Response Schema `200 OK`\n\n```json\n{\n    \"data\": {\n        \"id\": \"integer\",\n        \"name\": \"string\",\n        \"document_type\": \"string\",\n        \"document_number\": \"string\",\n        \"created_at\": \"string (ISO 8601)\",\n        \"updated_at\": \"string (ISO 8601)\"\n    }\n}\n```\n\n## Error Responses\n\n| Status | Description |\n|---|---|\n| `404 Not Found` | Customer does not exist |\n| `422 Unprocessable Entity` | Validation error |"
+          },
+          "response": []
+        }
+      ],
+      "description": "Manages customer information used in sales orders. Customers can be created, queried, and updated."
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "Create Order",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"customer_id\": 2,\r\n    \"items\": [\r\n        {\r\n            \"product_id\": 2,\r\n            \"quantity\": 5\r\n        },\r\n        {\r\n            \"product_id\": 5,\r\n            \"quantity\": 3\r\n        }\r\n    ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/orders",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "orders"
+              ]
+            },
+            "description": "**Endpoint:** `http://localhost:8000/api/v1/orders`\n\nCreates a new order for a customer, specifying the products and quantities to include.\n\n## Request Body\n\n| Field | Type | Required | Description |\n| --- | --- | --- | --- |\n| `customer_id` | integer |  | The ID of the customer placing the order |\n| `items` | array | ✓ | List of order items |\n| `items[].product_id` | integer | ✓ | The ID of the product |\n| `items[].quantity` | integer | ✓ | Quantity of the product to order |\n\n### Example\n\n``` json\n{\n    \"customer_id\": 2,\n    \"items\": [\n        {\n            \"product_id\": 2,\n            \"quantity\": 2\n        },\n        {\n            \"product_id\": 5,\n            \"quantity\": 3\n        }\n    ]\n}\n\n ```"
+          },
+          "response": []
+        },
+        {
+          "name": "List Orders",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/orders",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "orders"
+              ],
+              "query": [
+                {
+                  "key": "customer_id",
+                  "value": "3",
+                  "disabled": true
+                },
+                {
+                  "key": "user",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "order_id",
+                  "value": "14",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "**Endpoint:** `http://localhost:8000/api/v1/orders`\n\nReturns a paginated list of all orders. Supports filtering by customer, user, or specific order ID.\n\n## Query Parameters\n\n| Parameter | Type | Required | Description |\n|---|---|---|---|\n| `page` | integer | — | Page number for pagination (default: `1`) |\n| `customer_id` | integer | — | Filter orders by customer ID |\n| `user` | integer | — | Filter orders by user ID |\n| `order_id` | integer | — | Filter by a specific order ID |"
+          },
+          "response": []
+        },
+        {
+          "name": "Show Order",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/orders/:order",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "orders",
+                ":order"
+              ],
+              "variable": [
+                {
+                  "key": "order",
+                  "value": "14"
+                }
+              ]
+            },
+            "description": "**Endpoint:** `http://localhost:8000/api/v1/orders/:order`\n\nReturns the details of a single order by its ID.\n\n## Path Parameters\n\n| Parameter | Type | Required | Description |\n|---|---|---|---|\n| `:order` | integer | ✓ | The ID of the order |\n\n## Error Responses\n\n| Status | Description |\n|---|---|\n| `404 Not Found` | Order does not exist |"
+          },
+          "response": []
+        }
+      ],
+      "description": "Manages sales orders and their items, integrating customers, products, inventory, and stock movements."
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "exec": [
+          "pm.request.headers.upsert({\r",
+          "    key: 'Accept',\r",
+          "    value: 'application/json'\r",
+          "});"
+        ],
+        "type": "text/javascript"
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000"
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ]
+}
